@@ -50,10 +50,18 @@ func (g *Game) Draw(screen *ebiten.Image) {
 					var object image.Rectangle
 					switch g.CurrentLevel.ObjectsGrid[y][x] {
 					case level.Player:
-						object = image.Rect(
-							0, 16,
-							16, 48,
-						)
+						switch g.PlayerState {
+						case Alive, Dead:
+							object = image.Rect(
+								0, 16,
+								16, 48,
+							)
+						case HoldingWater:
+							object = image.Rect(
+								16, 16,
+								32, 48,
+							)
+						}
 					case level.FlowerPot:
 						object = image.Rect(
 							0, 48,
@@ -73,6 +81,11 @@ func (g *Game) Draw(screen *ebiten.Image) {
 						object = image.Rect(
 							48, 48,
 							64, 80,
+						)
+					case level.Water:
+						object = image.Rect(
+							0, 80,
+							16, 128,
 						)
 					}
 					op := &ebiten.DrawImageOptions{}

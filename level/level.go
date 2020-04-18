@@ -23,8 +23,6 @@ type Level struct {
 	Height             int
 	PlayerInitialX     int
 	PlayerInitialY     int
-	FlowerX            int
-	FlowerY            int
 	FlowerInitialState Object
 }
 
@@ -46,6 +44,7 @@ const (
 	FlowerBud
 	FlowerBaby
 	FlowerGrown
+	Water
 )
 
 //TestLevel is a dummy level for testing
@@ -54,20 +53,18 @@ var TestLevel Level = Level{
 	Height:             16,
 	PlayerInitialX:     5,
 	PlayerInitialY:     4,
-	FlowerX:            3,
-	FlowerY:            3,
 	FlowerInitialState: FlowerBud,
 	ObjectsGrid: [][]Object{
 		[]Object{None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None},
 		[]Object{None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None},
-		[]Object{None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None},
+		[]Object{None, None, None, None, None, None, None, Water, None, None, None, None, None, None, None, None},
 		[]Object{None, None, None, FlowerBud, None, None, None, None, None, None, None, None, None, None, None, None},
 		[]Object{None, None, None, None, None, Player, None, None, None, None, None, None, None, None, None, None},
 		[]Object{None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None},
+		[]Object{None, None, None, None, None, None, None, Water, None, None, None, None, None, None, None, None},
 		[]Object{None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None},
-		[]Object{None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None},
-		[]Object{None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None},
-		[]Object{None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None},
+		[]Object{None, None, Water, None, None, None, None, None, None, None, None, None, None, None, None, None},
+		[]Object{None, None, None, None, None, None, None, Water, None, None, None, None, None, None, None, None},
 		[]Object{None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None},
 		[]Object{None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None},
 		[]Object{None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None},

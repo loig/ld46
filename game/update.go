@@ -102,7 +102,11 @@ func isValid(g *Game, newPlayerX, newPlayerY int) bool {
 	if newPlayerY >= g.CurrentLevel.Height {
 		return false
 	}
-	return g.CurrentLevel.ObjectsGrid[newPlayerY][newPlayerX] == level.None
+	objectOnNewPosition := g.CurrentLevel.ObjectsGrid[newPlayerY][newPlayerX]
+	if g.PlayerState != Alive {
+		return objectOnNewPosition == level.None
+	}
+	return objectOnNewPosition == level.None || objectOnNewPosition == level.Water
 }
 
 func updateLevelGrid(g *Game, oldPlayerX, oldPlayerY int) {
@@ -117,14 +121,17 @@ func updateLevelGrid(g *Game, oldPlayerX, oldPlayerY int) {
 
 func updatePlayerState(g *Game, oldPlayerX, oldPlayerY, newPlayerX, newPlayerY int) {
 	g.CurrentLevel.ObjectsGrid[oldPlayerY][oldPlayerX] = level.None
-	g.CurrentLevel.ObjectsGrid[newPlayerY][newPlayerX] = level.Player
 	g.PlayerX = newPlayerX
 	g.PlayerY = newPlayerY
 	tileBelowPlayer := g.CurrentLevel.FloorGrid[g.PlayerY][g.PlayerX]
+	objectWithPlayer := g.CurrentLevel.ObjectsGrid[g.PlayerY][g.PlayerX]
 	switch {
 	case !tileBelowPlayer.IsFloor:
 		g.PlayerState = Dead
+	case objectWithPlayer == level.Water:
+		g.PlayerState = HoldingWater
 	}
+	g.CurrentLevel.ObjectsGrid[newPlayerY][newPlayerX] = level.Player
 }
 
 func resetGame(g *Game) {
@@ -132,4 +139,5 @@ func resetGame(g *Game) {
 	g.PlayerX = g.ResetLevel.PlayerInitialX
 	g.PlayerY = g.ResetLevel.PlayerInitialY
 	g.PlayerState = Alive
+	g.FlowerState = g.ResetLevel.FlowerInitialState
 }

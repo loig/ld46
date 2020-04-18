@@ -42,6 +42,7 @@ type PState int
 const (
 	Dead PState = iota
 	Alive
+	HoldingWater
 )
 
 //Game defines the general game structure
@@ -50,8 +51,6 @@ type Game struct {
 	PlayerState  PState
 	PlayerX      int
 	PlayerY      int
-	FlowerX      int
-	FlowerY      int
 	FlowerState  level.Object
 	ResetLevel   level.Level
 	CurrentLevel level.Level

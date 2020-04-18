@@ -34,8 +34,6 @@ func init() {
 	img, _, err := ebitenutil.NewImageFromFile("images/tiles.png", ebiten.FilterDefault)
 	g.PlayerX = g.CurrentLevel.PlayerInitialX
 	g.PlayerY = g.CurrentLevel.PlayerInitialY
-	g.FlowerX = g.CurrentLevel.FlowerX
-	g.FlowerY = g.CurrentLevel.FlowerY
 	g.FlowerState = g.CurrentLevel.FlowerInitialState
 	if err != nil {
 		panic(err)
