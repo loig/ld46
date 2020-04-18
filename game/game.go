@@ -33,6 +33,7 @@ type State int
 //Possible State values
 const (
 	InLevel State = iota
+	LevelFinished
 )
 
 //PState defines a possible state of the player

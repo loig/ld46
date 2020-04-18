@@ -16,8 +16,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 package game
 
 import (
-	"fmt"
-
 	"github.com/hajimehoshi/ebiten"
 	"github.com/hajimehoshi/ebiten/inpututil"
 	"github.com/loig/ld46/level"
@@ -27,9 +25,8 @@ import (
 func (g *Game) Update(screen *ebiten.Image) error {
 
 	if g.GameState == InLevel {
-
 		if g.levelComplete() {
-			fmt.Println("ok")
+			g.GameState = LevelFinished
 		}
 
 		if g.PlayerState != Dead {
@@ -90,6 +87,7 @@ func (g *Game) Update(screen *ebiten.Image) error {
 		if inpututil.IsKeyJustPressed(ebiten.KeyR) {
 			g.resetGame()
 		}
+		return nil
 	}
 
 	return nil
