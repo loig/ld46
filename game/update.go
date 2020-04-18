@@ -15,13 +15,51 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package game
 
-import "github.com/hajimehoshi/ebiten"
+import (
+	"github.com/hajimehoshi/ebiten"
+	"github.com/hajimehoshi/ebiten/inpututil"
+	"github.com/loig/ld46/level"
+)
 
 //Update for ensuring that Game implements the ebiten.Game interface
 func (g *Game) Update(screen *ebiten.Image) error {
 
 	if g.GameState == InLevel {
+		if inpututil.IsKeyJustPressed(ebiten.KeyDown) {
+			if g.CurrentLevel.PlayerY < g.CurrentLevel.Height-1 {
+				g.CurrentLevel.ObjectsGrid[g.CurrentLevel.PlayerY][g.CurrentLevel.PlayerX] = level.None
+				g.CurrentLevel.PlayerY++
+				g.CurrentLevel.ObjectsGrid[g.CurrentLevel.PlayerY][g.CurrentLevel.PlayerX] = level.Player
+			}
+			return nil
+		}
 
+		if inpututil.IsKeyJustPressed(ebiten.KeyUp) {
+			if g.CurrentLevel.PlayerY > 0 {
+				g.CurrentLevel.ObjectsGrid[g.CurrentLevel.PlayerY][g.CurrentLevel.PlayerX] = level.None
+				g.CurrentLevel.PlayerY--
+				g.CurrentLevel.ObjectsGrid[g.CurrentLevel.PlayerY][g.CurrentLevel.PlayerX] = level.Player
+			}
+			return nil
+		}
+
+		if inpututil.IsKeyJustPressed(ebiten.KeyRight) {
+			if g.CurrentLevel.PlayerX < g.CurrentLevel.Width-1 {
+				g.CurrentLevel.ObjectsGrid[g.CurrentLevel.PlayerY][g.CurrentLevel.PlayerX] = level.None
+				g.CurrentLevel.PlayerX++
+				g.CurrentLevel.ObjectsGrid[g.CurrentLevel.PlayerY][g.CurrentLevel.PlayerX] = level.Player
+			}
+			return nil
+		}
+
+		if inpututil.IsKeyJustPressed(ebiten.KeyLeft) {
+			if g.CurrentLevel.PlayerX > 0 {
+				g.CurrentLevel.ObjectsGrid[g.CurrentLevel.PlayerY][g.CurrentLevel.PlayerX] = level.None
+				g.CurrentLevel.PlayerX--
+				g.CurrentLevel.ObjectsGrid[g.CurrentLevel.PlayerY][g.CurrentLevel.PlayerX] = level.Player
+			}
+			return nil
+		}
 	}
 
 	return nil
