@@ -244,6 +244,25 @@ func (g *Game) setNextLevel() {
 	for i := 0; i < len(scores); i++ {
 		scores[i] = 0
 	}
-	scores[resets] = -1
-	g.resetGame()
+	nextLevel, gameFinished, isTuto, levelNumber, tutoNumber := level.GetLevel()
+	g.GameState = InLevel
+	if isTuto {
+		g.GameState = InTuto
+	}
+	if gameFinished {
+		g.GameState = GameFinished
+	}
+	g.PlayerState = HoldingNothing
+	if nextLevel != nil {
+		g.ResetLevel = *nextLevel
+		g.CurrentLevel = g.ResetLevel.CopyLevel()
+	}
+	g.LevelNumber = levelNumber
+	g.TutoNumber = tutoNumber
+	g.PlayerX = g.CurrentLevel.PlayerInitialX
+	g.PlayerY = g.CurrentLevel.PlayerInitialY
+	g.FlowerState = g.CurrentLevel.FlowerInitialState
+	g.FallingTilesAnimationStep = make(map[level.TilePosition]int)
+	g.FallingTilesAnimationFrame = make(map[level.TilePosition]int)
+	g.ResetAnimation()
 }

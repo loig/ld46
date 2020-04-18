@@ -15,6 +15,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package level
 
+var currentLevel = 0
+var currentTuto = 0
+
 //Level defines the content of a single level of the game
 type Level struct {
 	FloorGrid          [][]Tile
@@ -58,54 +61,14 @@ const (
 	Water
 )
 
-//TestLevel is a dummy level for testing
-var TestLevel Level = Level{
-	Width:              16,
-	Height:             16,
-	PlayerInitialX:     5,
-	PlayerInitialY:     4,
-	FlowerX:            3,
-	FlowerY:            3,
-	FlowerInitialState: FlowerBud,
-	LinkedTiles: []TilePosition{
-		TilePosition{3, 6},
-		TilePosition{5, 7},
-		TilePosition{11, 5},
-	},
-	ObjectsGrid: [][]Object{
-		[]Object{None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None},
-		[]Object{None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None},
-		[]Object{None, None, None, None, None, None, None, Water, None, None, None, None, None, None, None, None},
-		[]Object{None, None, None, FlowerBud, None, None, None, None, None, None, None, None, None, None, None, None},
-		[]Object{None, None, None, None, None, Player, None, None, None, None, None, None, None, None, None, None},
-		[]Object{None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None},
-		[]Object{None, None, None, None, None, None, None, Water, None, None, None, None, None, None, None, None},
-		[]Object{None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None},
-		[]Object{None, None, Water, None, None, None, None, None, None, None, None, None, None, None, None, None},
-		[]Object{None, None, None, None, None, None, None, Water, None, None, None, None, None, None, None, None},
-		[]Object{None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None},
-		[]Object{None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None},
-		[]Object{None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None},
-		[]Object{None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None},
-		[]Object{None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None},
-		[]Object{None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None},
-	},
-	FloorGrid: [][]Tile{
-		[]Tile{Tile{true, false, 0, false}, Tile{true, true, 1, false}, Tile{true, true, 2, false}, Tile{true, true, 3, false}, Tile{false, false, 0, false}, Tile{false, false, 0, false}, Tile{false, false, 0, false}, Tile{false, false, 0, false}, Tile{false, false, 0, false}, Tile{false, false, 0, false}, Tile{false, false, 0, false}, Tile{false, false, 0, false}, Tile{false, false, 0, false}, Tile{false, false, 0, false}, Tile{false, false, 0, false}, Tile{true, false, 0, false}},
-		[]Tile{Tile{false, false, 0, false}, Tile{false, false, 0, false}, Tile{false, false, 0, false}, Tile{false, false, 0, false}, Tile{false, false, 0, false}, Tile{false, false, 0, false}, Tile{false, false, 0, false}, Tile{false, false, 0, false}, Tile{false, false, 0, false}, Tile{false, false, 0, false}, Tile{false, false, 0, false}, Tile{false, false, 0, false}, Tile{false, false, 0, false}, Tile{false, false, 0, false}, Tile{false, false, 0, false}, Tile{true, false, 0, false}},
-		[]Tile{Tile{false, false, 0, false}, Tile{true, false, 0, false}, Tile{true, true, 1, false}, Tile{true, false, 0, false}, Tile{true, true, 1, false}, Tile{true, false, 0, false}, Tile{true, true, 2, false}, Tile{true, false, 0, false}, Tile{true, true, 3, false}, Tile{true, false, 0, false}, Tile{true, true, 1, false}, Tile{true, false, 0, false}, Tile{true, true, 1, false}, Tile{true, false, 0, false}, Tile{true, true, 1, false}, Tile{true, false, 0, false}},
-		[]Tile{Tile{false, false, 0, false}, Tile{true, false, 0, false}, Tile{true, true, 1, false}, Tile{true, false, 0, false}, Tile{true, true, 1, false}, Tile{true, false, 0, false}, Tile{true, true, 1, false}, Tile{true, false, 0, false}, Tile{true, true, 1, false}, Tile{true, false, 0, false}, Tile{true, true, 1, false}, Tile{true, false, 0, false}, Tile{true, true, 1, false}, Tile{true, false, 0, false}, Tile{true, true, 1, false}, Tile{true, false, 0, false}},
-		[]Tile{Tile{false, false, 0, false}, Tile{true, false, 0, false}, Tile{true, true, 1, false}, Tile{true, false, 0, false}, Tile{true, true, 1, false}, Tile{true, false, 0, false}, Tile{true, true, 1, false}, Tile{true, false, 0, false}, Tile{true, true, 1, false}, Tile{true, false, 0, false}, Tile{true, true, 1, false}, Tile{true, false, 0, false}, Tile{true, true, 1, false}, Tile{true, false, 0, false}, Tile{true, true, 1, false}, Tile{false, false, 0, false}},
-		[]Tile{Tile{false, false, 0, false}, Tile{true, false, 0, false}, Tile{true, true, 1, false}, Tile{true, false, 0, false}, Tile{true, true, 1, false}, Tile{true, false, 0, false}, Tile{true, true, 1, false}, Tile{true, false, 0, false}, Tile{true, true, 1, false}, Tile{true, false, 0, false}, Tile{true, true, 1, false}, Tile{true, false, 0, true}, Tile{true, true, 1, false}, Tile{true, false, 0, false}, Tile{true, true, 1, false}, Tile{false, false, 0, false}},
-		[]Tile{Tile{false, false, 0, false}, Tile{true, false, 0, false}, Tile{true, true, 1, false}, Tile{true, false, 0, true}, Tile{true, true, 1, false}, Tile{true, false, 0, false}, Tile{true, true, 1, false}, Tile{true, false, 0, false}, Tile{true, true, 1, false}, Tile{true, false, 0, false}, Tile{true, true, 1, false}, Tile{true, false, 0, false}, Tile{true, true, 1, false}, Tile{true, false, 0, false}, Tile{true, true, 1, false}, Tile{false, false, 0, false}},
-		[]Tile{Tile{false, false, 0, false}, Tile{true, false, 0, false}, Tile{true, true, 1, false}, Tile{true, false, 0, false}, Tile{true, true, 1, false}, Tile{true, false, 0, true}, Tile{true, true, 1, false}, Tile{true, false, 0, false}, Tile{true, true, 1, false}, Tile{true, false, 0, false}, Tile{true, true, 1, false}, Tile{true, false, 0, false}, Tile{true, true, 1, false}, Tile{true, false, 0, false}, Tile{true, true, 1, false}, Tile{false, false, 0, false}},
-		[]Tile{Tile{false, false, 0, false}, Tile{true, false, 0, false}, Tile{true, true, 1, false}, Tile{true, false, 0, false}, Tile{true, true, 1, false}, Tile{true, false, 0, false}, Tile{true, true, 1, false}, Tile{true, false, 0, false}, Tile{true, true, 1, false}, Tile{true, false, 0, false}, Tile{true, true, 1, false}, Tile{true, false, 0, false}, Tile{true, true, 1, false}, Tile{true, false, 0, false}, Tile{true, true, 1, false}, Tile{false, false, 0, false}},
-		[]Tile{Tile{false, false, 0, false}, Tile{true, false, 0, false}, Tile{true, true, 1, false}, Tile{true, false, 0, false}, Tile{true, true, 1, false}, Tile{true, false, 0, false}, Tile{true, true, 1, false}, Tile{true, false, 0, false}, Tile{true, true, 1, false}, Tile{true, false, 0, false}, Tile{true, true, 1, false}, Tile{true, false, 0, false}, Tile{true, true, 1, false}, Tile{true, false, 0, false}, Tile{true, true, 1, false}, Tile{false, false, 0, false}},
-		[]Tile{Tile{false, false, 0, false}, Tile{true, false, 0, false}, Tile{true, true, 1, false}, Tile{true, false, 0, false}, Tile{true, true, 1, false}, Tile{true, false, 0, false}, Tile{true, true, 1, false}, Tile{true, false, 0, false}, Tile{true, true, 1, false}, Tile{true, false, 0, false}, Tile{true, true, 1, false}, Tile{true, false, 0, false}, Tile{true, true, 1, false}, Tile{true, false, 0, false}, Tile{true, true, 1, false}, Tile{false, false, 0, false}},
-		[]Tile{Tile{false, false, 0, false}, Tile{true, false, 0, false}, Tile{true, true, 1, false}, Tile{true, false, 0, false}, Tile{true, true, 1, false}, Tile{true, false, 0, false}, Tile{true, true, 1, false}, Tile{true, false, 0, false}, Tile{true, true, 1, false}, Tile{true, false, 0, false}, Tile{true, true, 1, false}, Tile{true, false, 0, false}, Tile{true, true, 1, false}, Tile{true, false, 0, false}, Tile{true, true, 1, false}, Tile{false, false, 0, false}},
-		[]Tile{Tile{false, false, 0, false}, Tile{true, false, 0, false}, Tile{true, true, 1, false}, Tile{true, false, 0, false}, Tile{true, true, 1, false}, Tile{true, false, 0, false}, Tile{true, true, 1, false}, Tile{true, false, 0, false}, Tile{true, true, 1, false}, Tile{true, false, 0, false}, Tile{true, true, 1, false}, Tile{true, false, 0, false}, Tile{true, true, 1, false}, Tile{true, false, 0, false}, Tile{true, true, 1, false}, Tile{false, false, 0, false}},
-		[]Tile{Tile{true, false, 0, false}, Tile{true, false, 0, false}, Tile{true, true, 1, false}, Tile{true, false, 0, false}, Tile{true, true, 1, false}, Tile{true, false, 0, false}, Tile{true, true, 1, false}, Tile{true, false, 0, false}, Tile{true, true, 1, false}, Tile{true, false, 0, false}, Tile{true, true, 1, false}, Tile{true, false, 0, false}, Tile{true, true, 1, false}, Tile{true, false, 0, false}, Tile{true, true, 1, false}, Tile{true, false, 0, false}},
-		[]Tile{Tile{true, false, 0, false}, Tile{true, false, 0, false}, Tile{true, true, 1, false}, Tile{true, false, 0, false}, Tile{true, true, 1, false}, Tile{true, false, 0, false}, Tile{true, true, 1, false}, Tile{true, false, 0, false}, Tile{true, true, 1, false}, Tile{true, false, 0, false}, Tile{true, true, 1, false}, Tile{true, false, 0, false}, Tile{true, true, 1, false}, Tile{true, false, 0, false}, Tile{true, true, 1, false}, Tile{true, false, 0, false}},
-		[]Tile{Tile{true, false, 0, false}, Tile{false, false, 0, false}, Tile{false, false, 0, false}, Tile{false, false, 0, false}, Tile{false, false, 0, false}, Tile{false, false, 0, false}, Tile{false, false, 0, false}, Tile{false, false, 0, false}, Tile{false, false, 0, false}, Tile{false, false, 0, false}, Tile{false, false, 0, false}, Tile{false, false, 0, false}, Tile{false, false, 0, false}, Tile{false, false, 0, false}, Tile{false, false, 0, false}, Tile{true, false, 0, false}},
-	},
+//GetLevel returns the next level to complete
+func GetLevel() (level *Level, gameFinished, isTuto bool, levelNumber, tutoNumber int) {
+	currentLevel++
+	switch currentLevel {
+	case 1:
+		return &testLevel, false, false, currentLevel, currentTuto
+	case 2:
+		return &testLevel2, false, false, currentLevel, currentTuto
+	}
+	return nil, true, false, 0, 0
 }

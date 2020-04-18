@@ -42,6 +42,7 @@ type State int
 //Possible State values
 const (
 	BeginMenu State = iota
+	InTuto
 	InLevel
 	LevelFinished
 	GameFinished
@@ -87,6 +88,8 @@ type Game struct {
 	FlowerState                level.Object
 	ResetLevel                 level.Level
 	CurrentLevel               level.Level
+	LevelNumber                int
+	TutoNumber                 int
 	Tiles                      *ebiten.Image
 	MenuFocus                  Focus
 	DisplayFont                font.Face
@@ -100,11 +103,22 @@ func (g *Game) Layout(outsideWidth, outsideHeigth int) (screenWidth, screenHeigh
 //InitGame performs all necessary stuff before starting a game,
 //except for media loading
 func (g *Game) InitGame() {
+	nextLevel, gameFinished, isTuto, levelNumber, tutoNumber := level.GetLevel()
 	g.GameState = BeginMenu
+	if isTuto {
+		g.GameState = InTuto
+	}
+	if gameFinished {
+		g.GameState = GameFinished
+	}
 	g.MenuFocus = Play
 	g.PlayerState = HoldingNothing
-	g.ResetLevel = level.TestLevel
-	g.CurrentLevel = g.ResetLevel.CopyLevel()
+	if nextLevel != nil {
+		g.ResetLevel = *nextLevel
+		g.CurrentLevel = g.ResetLevel.CopyLevel()
+	}
+	g.LevelNumber = levelNumber
+	g.TutoNumber = tutoNumber
 	g.PlayerX = g.CurrentLevel.PlayerInitialX
 	g.PlayerY = g.CurrentLevel.PlayerInitialY
 	g.FlowerState = g.CurrentLevel.FlowerInitialState
