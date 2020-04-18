@@ -33,13 +33,18 @@ func init() {
 	g.ResetLevel = level.TestLevel
 	g.CurrentLevel = g.ResetLevel.CopyLevel()
 	img, _, err := ebitenutil.NewImageFromFile("images/tiles.png", ebiten.FilterDefault)
-	g.PlayerX = g.CurrentLevel.PlayerInitialX
-	g.PlayerY = g.CurrentLevel.PlayerInitialY
-	g.FlowerState = g.CurrentLevel.FlowerInitialState
 	if err != nil {
 		panic(err)
 	}
 	g.Tiles = img
+	g.PlayerX = g.CurrentLevel.PlayerInitialX
+	g.PlayerY = g.CurrentLevel.PlayerInitialY
+	g.FlowerState = g.CurrentLevel.FlowerInitialState
+	img, _, err = ebitenutil.NewImageFromFile("images/info.png", ebiten.FilterDefault)
+	if err != nil {
+		panic(err)
+	}
+	g.InfoPageImage = img
 }
 
 func main() {

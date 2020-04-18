@@ -50,6 +50,13 @@ func (g *Game) Update(screen *ebiten.Image) error {
 		return nil
 	}
 
+	if g.GameState == InfoPage {
+		if inpututil.IsKeyJustPressed(ebiten.KeyEnter) || inpututil.IsKeyJustPressed(ebiten.KeyEscape) {
+			g.GameState = BeginMenu
+		}
+		return nil
+	}
+
 	if g.GameState == InLevel {
 		if g.levelComplete() {
 			g.GameState = LevelFinished

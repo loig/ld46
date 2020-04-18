@@ -72,6 +72,10 @@ func (g *Game) Draw(screen *ebiten.Image) {
 		return
 	}
 
+	if g.GameState == InfoPage {
+		screen.DrawImage(g.InfoPageImage, nil)
+	}
+
 	if g.GameState == InLevel {
 		for y := 0; y < g.CurrentLevel.Height; y++ {
 			for x := 0; x < g.CurrentLevel.Width; x++ {
