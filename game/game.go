@@ -20,6 +20,7 @@ import (
 
 	"github.com/hajimehoshi/ebiten"
 	"github.com/loig/ld46/level"
+	"golang.org/x/image/font"
 )
 
 //Constants defining the basic parameters of the game
@@ -27,6 +28,9 @@ const (
 	Title        = "ld46"
 	ScreenWidth  = 256
 	ScreenHeight = 256
+	InfoBlock    = "A game developped in 48h\n    by Loig Jezequel\n   for Ludum Dare 46!\n(see  https://ldjam.com)"
+	InfoBlock2   = "All images and sound are"
+	InfoBlock3   = "  Code source under GPL-3.0\n         available at\n https://github.com/loig/ld46"
 )
 
 //ErrEndGame is raised at the end of a game
@@ -40,6 +44,7 @@ const (
 	BeginMenu State = iota
 	InLevel
 	LevelFinished
+	GameFinished
 	InfoPage
 )
 
@@ -66,16 +71,18 @@ const (
 
 //Game defines the general game structure
 type Game struct {
-	GameState     State
-	PlayerState   PState
-	PlayerX       int
-	PlayerY       int
-	FlowerState   level.Object
-	ResetLevel    level.Level
-	CurrentLevel  level.Level
-	Tiles         *ebiten.Image
-	MenuFocus     Focus
-	InfoPageImage *ebiten.Image
+	GameState    State
+	GameStep     int
+	GameFrame    int
+	PlayerState  PState
+	PlayerX      int
+	PlayerY      int
+	FlowerState  level.Object
+	ResetLevel   level.Level
+	CurrentLevel level.Level
+	Tiles        *ebiten.Image
+	MenuFocus    Focus
+	DisplayFont  font.Face
 }
 
 //Layout for ensuring that Game implements the ebiten.Game interface

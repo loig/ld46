@@ -17,8 +17,10 @@ package game
 
 import (
 	"image"
+	"image/color"
 
 	"github.com/hajimehoshi/ebiten"
+	"github.com/hajimehoshi/ebiten/text"
 	"github.com/loig/ld46/level"
 )
 
@@ -73,7 +75,16 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	}
 
 	if g.GameState == InfoPage {
-		screen.DrawImage(g.InfoPageImage, nil)
+		text.Draw(screen, InfoBlock, g.DisplayFont, 30, 30, color.White)
+		text.Draw(screen, InfoBlock2, g.DisplayFont, 30, 85, color.White)
+		ccbysa := image.Rect(
+			160, 224,
+			256, 256,
+		)
+		op := &ebiten.DrawImageOptions{}
+		op.GeoM.Translate(80, 90)
+		screen.DrawImage(g.Tiles.SubImage(ccbysa).(*ebiten.Image), op)
+		text.Draw(screen, InfoBlock3, g.DisplayFont, 10, 150, color.White)
 	}
 
 	if g.GameState == InLevel {

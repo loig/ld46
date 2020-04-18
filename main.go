@@ -18,10 +18,13 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 package main
 
 import (
+	"github.com/golang/freetype/truetype"
 	"github.com/hajimehoshi/ebiten"
 	"github.com/hajimehoshi/ebiten/ebitenutil"
+	"github.com/hajimehoshi/ebiten/examples/resources/fonts"
 	"github.com/loig/ld46/game"
 	"github.com/loig/ld46/level"
+	"golang.org/x/image/font"
 )
 
 var g game.Game
@@ -40,11 +43,15 @@ func init() {
 	g.PlayerX = g.CurrentLevel.PlayerInitialX
 	g.PlayerY = g.CurrentLevel.PlayerInitialY
 	g.FlowerState = g.CurrentLevel.FlowerInitialState
-	img, _, err = ebitenutil.NewImageFromFile("images/info.png", ebiten.FilterDefault)
+	ttfont, err := truetype.Parse(fonts.ArcadeN_ttf)
 	if err != nil {
 		panic(err)
 	}
-	g.InfoPageImage = img
+	g.DisplayFont = truetype.NewFace(ttfont, &truetype.Options{
+		Size:    8,
+		DPI:     72,
+		Hinting: font.HintingFull,
+	})
 }
 
 func main() {
