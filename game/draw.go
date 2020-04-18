@@ -36,6 +36,11 @@ func (g *Game) Draw(screen *ebiten.Image) {
 							tileLife*16, 0,
 							16+tileLife*16, 16,
 						)
+					} else if g.CurrentLevel.FloorGrid[y][x].IsLinkedTile {
+						tile = image.Rect(
+							64, 0,
+							80, 16,
+						)
 					} else {
 						tile = image.Rect(
 							0, 0,

@@ -43,5 +43,10 @@ func (l Level) CopyLevel() Level {
 		}
 	}
 
+	copy.LinkedTiles = make([]TilePosition, len(l.LinkedTiles))
+	for i := 0; i < len(l.LinkedTiles); i++ {
+		copy.LinkedTiles[i] = l.LinkedTiles[i]
+	}
+
 	return copy
 }

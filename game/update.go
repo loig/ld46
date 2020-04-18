@@ -120,6 +120,11 @@ func (g *Game) updateLevelGrid(oldPlayerX, oldPlayerY int) {
 			g.CurrentLevel.FloorGrid[oldPlayerY][oldPlayerX].IsFloor = false
 			g.CurrentLevel.FloorGrid[oldPlayerY][oldPlayerX].IsFallingTile = false
 		}
+	} else if g.CurrentLevel.FloorGrid[oldPlayerY][oldPlayerX].IsLinkedTile {
+		for _, coord := range g.CurrentLevel.LinkedTiles {
+			g.CurrentLevel.FloorGrid[coord.TileY][coord.TileX].IsFloor = false
+			g.CurrentLevel.FloorGrid[coord.TileY][coord.TileX].IsLinkedTile = false
+		}
 	}
 }
 
