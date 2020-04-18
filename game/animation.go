@@ -23,6 +23,7 @@ type animationInfo struct {
 const (
 	endLevelNumberOfSteps = 3
 	deathNumberOfSteps    = 1
+	standNumberOfSteps    = 1
 )
 
 //End of level animation management
@@ -68,3 +69,8 @@ var deathSteps = [deathNumberOfSteps]animationInfo{
 }
 
 const waitAfterDeath = 60
+
+//Stand animation management
+var standSteps = [standNumberOfSteps]animationInfo{
+	animationInfo{10, 2},
+}

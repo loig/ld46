@@ -69,6 +69,21 @@ func (g *Game) Update(screen *ebiten.Image) error {
 
 		if g.PlayerState != Dead {
 
+			if g.GameStep >= standNumberOfSteps {
+				g.GameStep = 0
+				g.AnimationStep = 0
+				g.AnimationFrame = 0
+			}
+			g.AnimationFrame++
+			if g.AnimationFrame >= standSteps[g.GameStep].framesPerAnimationStep {
+				g.AnimationFrame = 0
+				g.AnimationStep++
+				if g.AnimationStep >= standSteps[g.GameStep].animationSteps {
+					g.AnimationStep = 0
+					g.GameStep++
+				}
+			}
+
 			newPlayerX := g.PlayerX
 			newPlayerY := g.PlayerY
 			oldPlayerX := g.PlayerX
@@ -245,6 +260,9 @@ func (g *Game) updatePlayerState(oldPlayerX, oldPlayerY, newPlayerX, newPlayerY 
 
 func (g *Game) resetGame() {
 	scores[resets]++
+	g.GameStep = 0
+	g.AnimationStep = 0
+	g.AnimationFrame = 0
 	g.CurrentLevel = g.ResetLevel.CopyLevel()
 	g.PlayerX = g.ResetLevel.PlayerInitialX
 	g.PlayerY = g.ResetLevel.PlayerInitialY

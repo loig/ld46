@@ -122,13 +122,13 @@ func (g *Game) Draw(screen *ebiten.Image) {
 						switch g.PlayerState {
 						case HoldingNothing:
 							object = image.Rect(
-								0, 16,
-								16, 48,
+								0+16*g.AnimationStep, 16,
+								16+16*g.AnimationStep, 48,
 							)
 						case HoldingWater:
 							object = image.Rect(
-								32, 16,
-								48, 48,
+								32+16*g.AnimationStep, 16,
+								48+16*g.AnimationStep, 48,
 							)
 						case Dead:
 							if g.GameStep < deathNumberOfSteps {
