@@ -149,8 +149,6 @@ func (g *Game) Update(screen *ebiten.Image) error {
 		if inpututil.IsKeyJustPressed(ebiten.KeyEnter) {
 			if g.EndLevelStep >= endLevelNumberOfSteps {
 				g.setNextLevel()
-				g.GameState = InLevel
-				g.ResetAnimation()
 			}
 			g.EndLevelStep++
 			g.EndLevelAnimationStep = 0
@@ -188,13 +186,16 @@ func (g *Game) updateLevelGrid(oldPlayerX, oldPlayerY int) {
 		g.CurrentLevel.FloorGrid[oldPlayerY][oldPlayerX].FallingTileLife--
 		if g.CurrentLevel.FloorGrid[oldPlayerY][oldPlayerX].FallingTileLife <= 0 {
 			g.CurrentLevel.FloorGrid[oldPlayerY][oldPlayerX].IsFloor = false
-			g.CurrentLevel.FloorGrid[oldPlayerY][oldPlayerX].IsFallingTile = false
+			tilePos := level.TilePosition{TileX: oldPlayerX, TileY: oldPlayerY}
+			g.FallingTilesAnimationStep[tilePos] = 0
+			g.FallingTilesAnimationFrame[tilePos] = 0
 			scores[destroyed]++
 		}
 	} else if g.CurrentLevel.FloorGrid[oldPlayerY][oldPlayerX].IsLinkedTile {
 		for _, coord := range g.CurrentLevel.LinkedTiles {
 			g.CurrentLevel.FloorGrid[coord.TileY][coord.TileX].IsFloor = false
-			g.CurrentLevel.FloorGrid[coord.TileY][coord.TileX].IsLinkedTile = false
+			g.FallingTilesAnimationStep[coord] = 0
+			g.FallingTilesAnimationFrame[coord] = 0
 		}
 		scores[destroyed] += len(g.CurrentLevel.LinkedTiles)
 	}
@@ -231,6 +232,8 @@ func (g *Game) resetGame() {
 	g.PlayerY = g.ResetLevel.PlayerInitialY
 	g.PlayerState = HoldingNothing
 	g.FlowerState = g.ResetLevel.FlowerInitialState
+	g.GameState = InLevel
+	g.ResetAnimation()
 }
 
 func (g *Game) levelComplete() bool {

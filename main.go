@@ -23,26 +23,20 @@ import (
 	"github.com/hajimehoshi/ebiten/ebitenutil"
 	"github.com/hajimehoshi/ebiten/examples/resources/fonts"
 	"github.com/loig/ld46/game"
-	"github.com/loig/ld46/level"
 	"golang.org/x/image/font"
 )
 
 var g game.Game
 
 func init() {
-	g.GameState = game.BeginMenu
-	g.MenuFocus = game.Play
-	g.PlayerState = game.HoldingNothing
-	g.ResetLevel = level.TestLevel
-	g.CurrentLevel = g.ResetLevel.CopyLevel()
+	g.InitGame()
+
 	img, _, err := ebitenutil.NewImageFromFile("images/tiles.png", ebiten.FilterDefault)
 	if err != nil {
 		panic(err)
 	}
 	g.Tiles = img
-	g.PlayerX = g.CurrentLevel.PlayerInitialX
-	g.PlayerY = g.CurrentLevel.PlayerInitialY
-	g.FlowerState = g.CurrentLevel.FlowerInitialState
+
 	ttfont, err := truetype.Parse(fonts.ArcadeN_ttf)
 	if err != nil {
 		panic(err)

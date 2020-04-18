@@ -89,7 +89,10 @@ func (g *Game) Draw(screen *ebiten.Image) {
 		text.Draw(screen, InfoBlock3, g.DisplayFont, 10, 150, color.White)
 	}
 
-	if g.GameState == InLevel {
+	if g.GameState == InLevel ||
+		(g.GameState == LevelFinished &&
+			(endLevelStepName(g.EndLevelStep) == congrats ||
+				endLevelStepName(g.EndLevelStep) == fadeout)) {
 		for y := 0; y < g.CurrentLevel.Height; y++ {
 			for x := 0; x < g.CurrentLevel.Width; x++ {
 				if g.CurrentLevel.FloorGrid[y][x].IsFloor {
@@ -114,6 +117,26 @@ func (g *Game) Draw(screen *ebiten.Image) {
 					op := &ebiten.DrawImageOptions{}
 					op.GeoM.Translate(float64(x*16), float64(y*16))
 					screen.DrawImage(g.Tiles.SubImage(tile).(*ebiten.Image), op)
+				} else if g.CurrentLevel.FloorGrid[y][x].IsFallingTile || g.CurrentLevel.FloorGrid[y][x].IsLinkedTile {
+					tilePos := level.TilePosition{TileX: x, TileY: y}
+					animationStep, exists := g.FallingTilesAnimationStep[tilePos]
+					if exists {
+						var tile image.Rectangle
+						if g.CurrentLevel.FloorGrid[y][x].IsFallingTile {
+							tile = image.Rect(
+								80+16*animationStep, 0,
+								96+16*animationStep, 16,
+							)
+						} else { //LinkedTile
+							tile = image.Rect(
+								128+16*animationStep, 0,
+								144+16*animationStep, 16,
+							)
+						}
+						op := &ebiten.DrawImageOptions{}
+						op.GeoM.Translate(float64(x*16), float64(y*16))
+						screen.DrawImage(g.Tiles.SubImage(tile).(*ebiten.Image), op)
+					}
 				}
 				if g.CurrentLevel.ObjectsGrid[y][x] != level.None {
 					var object image.Rectangle
@@ -176,13 +199,10 @@ func (g *Game) Draw(screen *ebiten.Image) {
 				}
 			}
 		}
-		return
 	}
 
 	if g.GameState == LevelFinished {
 		switch endLevelStepName(g.EndLevelStep) {
-		case congrats:
-			fmt.Println("congrats")
 		case fadeout:
 			fmt.Println("fadeout")
 		case score:
@@ -198,6 +218,7 @@ func (g *Game) Draw(screen *ebiten.Image) {
 				text.Draw(screen, scoreForDisplay, g.DisplayFont, 40, 70+i*10, color.White)
 			}
 		}
+		return
 	}
 
 }

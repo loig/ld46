@@ -71,26 +71,43 @@ const (
 
 //Game defines the general game structure
 type Game struct {
-	GameState              State
-	PlayerAnimationStep    int
-	PlayerAnimationFrame   int
-	FlowerAnimationStep    int
-	FlowerAnimationFrame   int
-	EndLevelStep           int
-	EndLevelAnimationStep  int
-	EndLevelAnimationFrame int
-	PlayerState            PState
-	PlayerX                int
-	PlayerY                int
-	FlowerState            level.Object
-	ResetLevel             level.Level
-	CurrentLevel           level.Level
-	Tiles                  *ebiten.Image
-	MenuFocus              Focus
-	DisplayFont            font.Face
+	GameState                  State
+	PlayerAnimationStep        int
+	PlayerAnimationFrame       int
+	FlowerAnimationStep        int
+	FlowerAnimationFrame       int
+	EndLevelStep               int
+	EndLevelAnimationStep      int
+	EndLevelAnimationFrame     int
+	FallingTilesAnimationStep  map[level.TilePosition]int
+	FallingTilesAnimationFrame map[level.TilePosition]int
+	PlayerState                PState
+	PlayerX                    int
+	PlayerY                    int
+	FlowerState                level.Object
+	ResetLevel                 level.Level
+	CurrentLevel               level.Level
+	Tiles                      *ebiten.Image
+	MenuFocus                  Focus
+	DisplayFont                font.Face
 }
 
 //Layout for ensuring that Game implements the ebiten.Game interface
 func (g *Game) Layout(outsideWidth, outsideHeigth int) (screenWidth, screenHeight int) {
 	return ScreenWidth, ScreenHeight
+}
+
+//InitGame performs all necessary stuff before starting a game,
+//except for media loading
+func (g *Game) InitGame() {
+	g.GameState = BeginMenu
+	g.MenuFocus = Play
+	g.PlayerState = HoldingNothing
+	g.ResetLevel = level.TestLevel
+	g.CurrentLevel = g.ResetLevel.CopyLevel()
+	g.PlayerX = g.CurrentLevel.PlayerInitialX
+	g.PlayerY = g.CurrentLevel.PlayerInitialY
+	g.FlowerState = g.CurrentLevel.FlowerInitialState
+	g.FallingTilesAnimationStep = make(map[level.TilePosition]int)
+	g.FallingTilesAnimationFrame = make(map[level.TilePosition]int)
 }

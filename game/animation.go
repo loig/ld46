@@ -15,6 +15,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package game
 
+import "github.com/loig/ld46/level"
+
 //UpdateAnimation determines the step of the animation of each element
 // of the game
 func (g *Game) UpdateAnimation() {
@@ -23,6 +25,7 @@ func (g *Game) UpdateAnimation() {
 	case InLevel:
 		g.UpdatePlayerAnimation()
 		g.UpdateFlowerAnimation()
+		g.UpdateFallingTilesAnimation()
 	case LevelFinished:
 		g.UpdateEndLevelAnimation()
 	case GameFinished:
@@ -39,57 +42,8 @@ func (g *Game) ResetAnimation() {
 	g.EndLevelStep = 0
 	g.EndLevelAnimationStep = 0
 	g.EndLevelAnimationFrame = 0
-}
-
-//UpdatePlayerAnimation determines the step of the animation of the player
-func (g *Game) UpdatePlayerAnimation() {
-	switch g.PlayerState {
-	case Dead:
-		g.PlayerAnimationFrame++
-		if g.PlayerAnimationStep < deathSteps.animationSteps {
-			if g.PlayerAnimationFrame >= deathSteps.framesPerAnimationStep {
-				g.PlayerAnimationFrame = 0
-				g.PlayerAnimationStep++
-			}
-		}
-	case HoldingWater, HoldingNothing:
-		g.PlayerAnimationFrame++
-		if g.PlayerAnimationFrame >= standSteps.framesPerAnimationStep {
-			g.PlayerAnimationFrame = 0
-			g.PlayerAnimationStep++
-			if g.PlayerAnimationStep >= standSteps.animationSteps {
-				g.PlayerAnimationStep = 0
-			}
-		}
-	}
-}
-
-//UpdateFlowerAnimation determines the step of the animation of the player
-func (g *Game) UpdateFlowerAnimation() {
-	g.FlowerAnimationFrame++
-	if g.FlowerAnimationFrame >= flowerSteps.framesPerAnimationStep {
-		g.FlowerAnimationFrame = 0
-		g.FlowerAnimationStep++
-		if g.FlowerAnimationStep >= flowerSteps.animationSteps {
-			g.FlowerAnimationStep = 0
-		}
-	}
-}
-
-//UpdateEndLevelAnimation determines the step of the animation transition
-//between levels
-func (g *Game) UpdateEndLevelAnimation() {
-	if g.EndLevelStep < endLevelNumberOfSteps {
-		g.EndLevelAnimationFrame++
-		if g.EndLevelAnimationFrame >= endLevelSteps[g.EndLevelStep].framesPerAnimationStep {
-			g.EndLevelAnimationFrame = 0
-			g.EndLevelAnimationStep++
-			if g.EndLevelAnimationStep >= endLevelSteps[g.EndLevelStep].animationSteps {
-				g.EndLevelAnimationStep = 0
-				g.EndLevelStep++
-			}
-		}
-	}
+	g.FallingTilesAnimationStep = make(map[level.TilePosition]int)
+	g.FallingTilesAnimationFrame = make(map[level.TilePosition]int)
 }
 
 type animationInfo struct {
@@ -116,26 +70,23 @@ var endLevelSteps = [endLevelNumberOfSteps]animationInfo{
 	animationInfo{20, 6},
 }
 
-var scoreTexts = [5]string{
-	"      Resets:   ",
-	"      Deaths:   ",
-	"Floor breaks:   ",
-	"       Steps:   ",
-	"      Dashes:   ",
+//UpdateEndLevelAnimation determines the step of the animation transition
+//between levels
+func (g *Game) UpdateEndLevelAnimation() {
+	if g.EndLevelStep < endLevelNumberOfSteps {
+		g.EndLevelAnimationFrame++
+		if g.EndLevelAnimationFrame >= endLevelSteps[g.EndLevelStep].framesPerAnimationStep {
+			g.EndLevelAnimationFrame = 0
+			g.EndLevelAnimationStep++
+			if g.EndLevelAnimationStep >= endLevelSteps[g.EndLevelStep].animationSteps {
+				g.EndLevelAnimationStep = 0
+				g.EndLevelStep++
+			}
+		}
+	}
 }
 
-type scoreName int
-
-const (
-	resets scoreName = iota
-	deaths
-	destroyed
-	playerSteps
-	playerDashes
-)
-
-var scores [5]int
-
+//Player animation management
 //Death animation management
 var deathSteps = animationInfo{15, 3}
 
@@ -144,5 +95,61 @@ const waitAfterDeath = 60
 //Stand animation management
 var standSteps = animationInfo{10, 2}
 
+//UpdatePlayerAnimation determines the step of the animation of the player
+func (g *Game) UpdatePlayerAnimation() {
+	switch g.PlayerState {
+	case Dead:
+		g.PlayerAnimationFrame++
+		if g.PlayerAnimationStep < deathSteps.animationSteps {
+			if g.PlayerAnimationFrame >= deathSteps.framesPerAnimationStep {
+				g.PlayerAnimationFrame = 0
+				g.PlayerAnimationStep++
+			}
+		}
+	case HoldingWater, HoldingNothing:
+		g.PlayerAnimationFrame++
+		if g.PlayerAnimationFrame >= standSteps.framesPerAnimationStep {
+			g.PlayerAnimationFrame = 0
+			g.PlayerAnimationStep++
+			if g.PlayerAnimationStep >= standSteps.animationSteps {
+				g.PlayerAnimationStep = 0
+			}
+		}
+	}
+}
+
 //Flower animation management
 var flowerSteps = animationInfo{18, 2}
+
+//UpdateFlowerAnimation determines the step of the animation of the player
+func (g *Game) UpdateFlowerAnimation() {
+	g.FlowerAnimationFrame++
+	if g.FlowerAnimationFrame >= flowerSteps.framesPerAnimationStep {
+		g.FlowerAnimationFrame = 0
+		g.FlowerAnimationStep++
+		if g.FlowerAnimationStep >= flowerSteps.animationSteps {
+			g.FlowerAnimationStep = 0
+		}
+	}
+}
+
+//Falling tiles animation management
+var fallingTileSteps = animationInfo{10, 3}
+
+//UpdateFallingTilesAnimation determines the step of the animation of
+//every currently falling tile
+func (g *Game) UpdateFallingTilesAnimation() {
+	for tilePos := range g.FallingTilesAnimationFrame {
+		g.FallingTilesAnimationFrame[tilePos]++
+		if g.FallingTilesAnimationFrame[tilePos] >= fallingTileSteps.framesPerAnimationStep {
+			g.FallingTilesAnimationFrame[tilePos] = 0
+			g.FallingTilesAnimationStep[tilePos]++
+			if g.FallingTilesAnimationStep[tilePos] >= fallingTileSteps.animationSteps {
+				delete(g.FallingTilesAnimationStep, tilePos)
+				delete(g.FallingTilesAnimationFrame, tilePos)
+				g.CurrentLevel.FloorGrid[tilePos.TileY][tilePos.TileX].IsFallingTile = false
+				g.CurrentLevel.FloorGrid[tilePos.TileY][tilePos.TileX].IsLinkedTile = false
+			}
+		}
+	}
+}
