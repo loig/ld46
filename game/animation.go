@@ -65,8 +65,8 @@ const (
 )
 
 var endLevelSteps = [endLevelNumberOfSteps]animationInfo{
-	animationInfo{10, 5},
-	animationInfo{10, 5},
+	animationInfo{15, 3},
+	animationInfo{60, 1},
 	animationInfo{20, 6},
 }
 

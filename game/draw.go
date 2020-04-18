@@ -16,7 +16,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 package game
 
 import (
-	"fmt"
 	"image"
 	"image/color"
 	"strconv"
@@ -142,28 +141,42 @@ func (g *Game) Draw(screen *ebiten.Image) {
 					var object image.Rectangle
 					switch g.CurrentLevel.ObjectsGrid[y][x] {
 					case level.Player:
-						switch g.PlayerState {
-						case HoldingNothing:
-							object = image.Rect(
-								0+16*g.PlayerAnimationStep, 16,
-								16+16*g.PlayerAnimationStep, 48,
-							)
-						case HoldingWater:
-							object = image.Rect(
-								32+16*g.PlayerAnimationStep, 16,
-								48+16*g.PlayerAnimationStep, 48,
-							)
-						case Dead:
-							if g.PlayerAnimationStep < deathSteps.animationSteps {
+						if g.GameState == LevelFinished {
+							if endLevelStepName(g.EndLevelStep) == congrats {
 								object = image.Rect(
-									64+16*g.PlayerAnimationStep, 16,
-									80+16*g.PlayerAnimationStep, 48,
+									112+16*g.EndLevelAnimationStep, 16,
+									128+16*g.EndLevelAnimationStep, 48,
 								)
 							} else {
 								object = image.Rect(
-									0, 0,
-									0, 0,
+									144, 16,
+									160, 48,
 								)
+							}
+						} else {
+							switch g.PlayerState {
+							case HoldingNothing:
+								object = image.Rect(
+									0+16*g.PlayerAnimationStep, 16,
+									16+16*g.PlayerAnimationStep, 48,
+								)
+							case HoldingWater:
+								object = image.Rect(
+									32+16*g.PlayerAnimationStep, 16,
+									48+16*g.PlayerAnimationStep, 48,
+								)
+							case Dead:
+								if g.PlayerAnimationStep < deathSteps.animationSteps {
+									object = image.Rect(
+										64+16*g.PlayerAnimationStep, 16,
+										80+16*g.PlayerAnimationStep, 48,
+									)
+								} else {
+									object = image.Rect(
+										0, 0,
+										0, 0,
+									)
+								}
 							}
 						}
 					case level.FlowerPot:
@@ -203,8 +216,6 @@ func (g *Game) Draw(screen *ebiten.Image) {
 
 	if g.GameState == LevelFinished {
 		switch endLevelStepName(g.EndLevelStep) {
-		case fadeout:
-			fmt.Println("fadeout")
 		case score:
 			text.Draw(screen, congratulationText, g.DisplayFont, 30, 50, color.White)
 			for i := 0; i < g.EndLevelAnimationStep-1; i++ {
