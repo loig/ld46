@@ -25,6 +25,10 @@ import (
 func (g *Game) Update(screen *ebiten.Image) error {
 
 	if g.GameState == InLevel {
+
+		oldPlayerX := g.PlayerX
+		oldPlayerY := g.PlayerY
+
 		if g.PlayerState != Dead {
 			if inpututil.IsKeyJustPressed(ebiten.KeyDown) {
 				if g.PlayerY < g.CurrentLevel.Height-1 {
@@ -32,6 +36,7 @@ func (g *Game) Update(screen *ebiten.Image) error {
 					g.PlayerY++
 					g.CurrentLevel.ObjectsGrid[g.PlayerY][g.PlayerX] = level.Player
 				}
+				updateLevelGrid(g, oldPlayerX, oldPlayerY)
 				checkPlayerState(g)
 				return nil
 			}
@@ -42,6 +47,7 @@ func (g *Game) Update(screen *ebiten.Image) error {
 					g.PlayerY--
 					g.CurrentLevel.ObjectsGrid[g.PlayerY][g.PlayerX] = level.Player
 				}
+				updateLevelGrid(g, oldPlayerX, oldPlayerY)
 				checkPlayerState(g)
 				return nil
 			}
@@ -52,6 +58,7 @@ func (g *Game) Update(screen *ebiten.Image) error {
 					g.PlayerX++
 					g.CurrentLevel.ObjectsGrid[g.PlayerY][g.PlayerX] = level.Player
 				}
+				updateLevelGrid(g, oldPlayerX, oldPlayerY)
 				checkPlayerState(g)
 				return nil
 			}
@@ -62,6 +69,7 @@ func (g *Game) Update(screen *ebiten.Image) error {
 					g.PlayerX--
 					g.CurrentLevel.ObjectsGrid[g.PlayerY][g.PlayerX] = level.Player
 				}
+				updateLevelGrid(g, oldPlayerX, oldPlayerY)
 				checkPlayerState(g)
 				return nil
 			}
@@ -73,6 +81,16 @@ func (g *Game) Update(screen *ebiten.Image) error {
 	}
 
 	return nil
+}
+
+func updateLevelGrid(g *Game, oldPlayerX int, oldPlayerY int) {
+	if g.CurrentLevel.FloorGrid[oldPlayerY][oldPlayerX].IsFallingTile {
+		g.CurrentLevel.FloorGrid[oldPlayerY][oldPlayerX].FallingTileLife--
+		if g.CurrentLevel.FloorGrid[oldPlayerY][oldPlayerX].FallingTileLife <= 0 {
+			g.CurrentLevel.FloorGrid[oldPlayerY][oldPlayerX].IsFloor = false
+			g.CurrentLevel.FloorGrid[oldPlayerY][oldPlayerX].IsFallingTile = false
+		}
+	}
 }
 
 func checkPlayerState(g *Game) {

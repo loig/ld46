@@ -29,10 +29,19 @@ func (g *Game) Draw(screen *ebiten.Image) {
 		for y := 0; y < g.CurrentLevel.Height; y++ {
 			for x := 0; x < g.CurrentLevel.Width; x++ {
 				if g.CurrentLevel.FloorGrid[y][x].IsFloor {
-					tile := image.Rect(
-						0, 0,
-						16, 16,
-					)
+					var tile image.Rectangle
+					if g.CurrentLevel.FloorGrid[y][x].IsFallingTile {
+						tileLife := g.CurrentLevel.FloorGrid[y][x].FallingTileLife
+						tile = image.Rect(
+							tileLife*16, 0,
+							16+tileLife*16, 16,
+						)
+					} else {
+						tile = image.Rect(
+							0, 0,
+							16, 16,
+						)
+					}
 					op := &ebiten.DrawImageOptions{}
 					op.GeoM.Translate(float64(x*16), float64(y*16))
 					screen.DrawImage(g.Tiles.SubImage(tile).(*ebiten.Image), op)
