@@ -16,8 +16,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 package game
 
 import (
+	"fmt"
 	"image"
 	"image/color"
+	"strconv"
 
 	"github.com/hajimehoshi/ebiten"
 	"github.com/hajimehoshi/ebiten/text"
@@ -163,6 +165,27 @@ func (g *Game) Draw(screen *ebiten.Image) {
 			}
 		}
 		return
+	}
+
+	if g.GameState == LevelFinished {
+		switch endLevelStepName(g.GameStep) {
+		case congrats:
+			fmt.Println("congrats")
+		case fadeout:
+			fmt.Println("fadeout")
+		case score:
+			text.Draw(screen, congratulationText, g.DisplayFont, 30, 50, color.White)
+			for i := 0; i < g.AnimationStep-1; i++ {
+				scoreForDisplay := scoreTexts[i] + strconv.Itoa(scores[i])
+				text.Draw(screen, scoreForDisplay, g.DisplayFont, 40, 70+i*10, color.White)
+			}
+		case endLevelNumberOfSteps:
+			text.Draw(screen, congratulationText, g.DisplayFont, 30, 50, color.White)
+			for i := 0; i < len(scores); i++ {
+				scoreForDisplay := scoreTexts[i] + strconv.Itoa(scores[i])
+				text.Draw(screen, scoreForDisplay, g.DisplayFont, 40, 70+i*10, color.White)
+			}
+		}
 	}
 
 }

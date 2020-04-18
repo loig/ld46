@@ -71,18 +71,19 @@ const (
 
 //Game defines the general game structure
 type Game struct {
-	GameState    State
-	GameStep     int
-	GameFrame    int
-	PlayerState  PState
-	PlayerX      int
-	PlayerY      int
-	FlowerState  level.Object
-	ResetLevel   level.Level
-	CurrentLevel level.Level
-	Tiles        *ebiten.Image
-	MenuFocus    Focus
-	DisplayFont  font.Face
+	GameState      State
+	GameStep       int
+	AnimationStep  int
+	AnimationFrame int
+	PlayerState    PState
+	PlayerX        int
+	PlayerY        int
+	FlowerState    level.Object
+	ResetLevel     level.Level
+	CurrentLevel   level.Level
+	Tiles          *ebiten.Image
+	MenuFocus      Focus
+	DisplayFont    font.Face
 }
 
 //Layout for ensuring that Game implements the ebiten.Game interface
