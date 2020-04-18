@@ -17,6 +17,21 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package main
 
-func main() {
+import (
+	"github.com/hajimehoshi/ebiten"
+	"github.com/loig/ld46/game"
+)
 
+var g game.Game
+
+func init() {
+	g.GameState = game.InLevel
+}
+
+func main() {
+	ebiten.SetWindowSize(512, 512)
+	ebiten.SetWindowTitle("ld46")
+	if err := ebiten.RunGame(&g); err != nil {
+		panic(err)
+	}
 }
