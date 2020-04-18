@@ -23,6 +23,8 @@ type Level struct {
 	Height             int
 	PlayerInitialX     int
 	PlayerInitialY     int
+	FlowerX            int
+	FlowerY            int
 	FlowerInitialState Object
 }
 
@@ -53,6 +55,8 @@ var TestLevel Level = Level{
 	Height:             16,
 	PlayerInitialX:     5,
 	PlayerInitialY:     4,
+	FlowerX:            3,
+	FlowerY:            3,
 	FlowerInitialState: FlowerBud,
 	ObjectsGrid: [][]Object{
 		[]Object{None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None},

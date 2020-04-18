@@ -33,7 +33,11 @@ func (o Object) IsFullyGrown() bool {
 	return o == FlowerGrown
 }
 
-//IsFlower tells if an object is a flower
-func (o Object) IsFlower() bool {
-	return o == FlowerPot || o == FlowerBud || o == FlowerBaby || o == FlowerGrown
+//IsPositionNextToFlower tells if the position x, y in the grid is right
+//next to the flower or not
+func (l Level) IsPositionNextToFlower(x, y int) (nextToFlower bool, flowerX, flowerY int) {
+	return (x == l.FlowerX && y-1 == l.FlowerY) ||
+		(x == l.FlowerX && y+1 == l.FlowerY) ||
+		(x-1 == l.FlowerX && y == l.FlowerY) ||
+		(x+1 == l.FlowerX && y == l.FlowerY), l.FlowerX, l.FlowerY
 }

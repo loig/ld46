@@ -135,7 +135,7 @@ func (g *Game) updatePlayerState(oldPlayerX, oldPlayerY, newPlayerX, newPlayerY 
 	case objectWithPlayer == level.Water:
 		g.PlayerState = HoldingWater
 	case g.PlayerState == HoldingWater:
-		nextToFlower, flowerX, flowerY := g.isPositionNextToFlower(newPlayerX, newPlayerY)
+		nextToFlower, flowerX, flowerY := g.CurrentLevel.IsPositionNextToFlower(newPlayerX, newPlayerY)
 		if nextToFlower {
 			g.FlowerState = g.CurrentLevel.ObjectsGrid[flowerY][flowerX].Grow()
 			g.CurrentLevel.ObjectsGrid[flowerY][flowerX] = g.FlowerState
@@ -143,39 +143,6 @@ func (g *Game) updatePlayerState(oldPlayerX, oldPlayerY, newPlayerX, newPlayerY 
 		}
 	}
 	g.CurrentLevel.ObjectsGrid[newPlayerY][newPlayerX] = level.Player
-}
-
-// Should never be called with x or y outside of the level
-func (g *Game) isPositionNextToFlower(x, y int) (nextToFlower bool, flowerX, flowerY int) {
-	flowerX = x
-	flowerY = y - 1
-	if flowerY > 0 {
-		if g.CurrentLevel.ObjectsGrid[flowerY][flowerX].IsFlower() {
-			return true, flowerX, flowerY
-		}
-	}
-	flowerX = x + 1
-	flowerY = y
-	if flowerX < g.CurrentLevel.Width {
-		if g.CurrentLevel.ObjectsGrid[flowerY][flowerX].IsFlower() {
-			return true, flowerX, flowerY
-		}
-	}
-	flowerX = x
-	flowerY = y + 1
-	if flowerY < g.CurrentLevel.Height {
-		if g.CurrentLevel.ObjectsGrid[flowerY][flowerX].IsFlower() {
-			return true, flowerX, flowerY
-		}
-	}
-	flowerX = x - 1
-	flowerY = y
-	if flowerX > 0 {
-		if g.CurrentLevel.ObjectsGrid[flowerY][flowerX].IsFlower() {
-			return true, flowerX, flowerY
-		}
-	}
-	return false, 0, 0
 }
 
 func (g *Game) resetGame() {
