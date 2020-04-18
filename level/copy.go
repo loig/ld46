@@ -21,8 +21,8 @@ func (l Level) CopyLevel() Level {
 
 	copy.Width = l.Width
 	copy.Height = l.Height
-	copy.PlayerX = l.PlayerX
-	copy.PlayerY = l.PlayerY
+	copy.PlayerInitialX = l.PlayerInitialX
+	copy.PlayerInitialY = l.PlayerInitialY
 
 	copy.FloorGrid = make([][]Tile, l.Height)
 	for y := 0; y < l.Height; y++ {

@@ -50,6 +50,9 @@ type Game struct {
 	PlayerState  PState
 	PlayerX      int
 	PlayerY      int
+	FlowerX      int
+	FlowerY      int
+	FlowerState  level.Object
 	ResetLevel   level.Level
 	CurrentLevel level.Level
 	Tiles        *ebiten.Image

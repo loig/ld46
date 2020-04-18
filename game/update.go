@@ -26,63 +26,57 @@ func (g *Game) Update(screen *ebiten.Image) error {
 
 	if g.GameState == InLevel {
 
-		oldPlayerX := g.PlayerX
-		oldPlayerY := g.PlayerY
-
 		if g.PlayerState != Dead {
+
+			newPlayerX := g.PlayerX
+			newPlayerY := g.PlayerY
+			oldPlayerX := g.PlayerX
+			oldPlayerY := g.PlayerY
+			hasMoved := false
+
 			if inpututil.IsKeyJustPressed(ebiten.KeyDown) {
-				if g.PlayerY < g.CurrentLevel.Height-1 {
-					g.CurrentLevel.ObjectsGrid[g.PlayerY][g.PlayerX] = level.None
-					g.PlayerY++
-					if ebiten.IsKeyPressed(ebiten.KeySpace) && g.PlayerY < g.CurrentLevel.Height-1 {
-						g.PlayerY++
-					}
-					g.CurrentLevel.ObjectsGrid[g.PlayerY][g.PlayerX] = level.Player
+				newPlayerY++
+				if ebiten.IsKeyPressed(ebiten.KeySpace) && isValid(g, newPlayerX, newPlayerY+1) {
+					newPlayerY++
+					hasMoved = true
+				} else if isValid(g, newPlayerX, newPlayerY) {
+					hasMoved = true
 				}
-				updateLevelGrid(g, oldPlayerX, oldPlayerY)
-				checkPlayerState(g)
-				return nil
 			}
 
 			if inpututil.IsKeyJustPressed(ebiten.KeyUp) {
-				if g.PlayerY > 0 {
-					g.CurrentLevel.ObjectsGrid[g.PlayerY][g.PlayerX] = level.None
-					g.PlayerY--
-					if ebiten.IsKeyPressed(ebiten.KeySpace) && g.PlayerY > 0 {
-						g.PlayerY--
-					}
-					g.CurrentLevel.ObjectsGrid[g.PlayerY][g.PlayerX] = level.Player
+				newPlayerY--
+				if ebiten.IsKeyPressed(ebiten.KeySpace) && isValid(g, newPlayerX, newPlayerY-1) {
+					newPlayerY--
+					hasMoved = true
+				} else if isValid(g, newPlayerX, newPlayerY) {
+					hasMoved = true
 				}
-				updateLevelGrid(g, oldPlayerX, oldPlayerY)
-				checkPlayerState(g)
-				return nil
 			}
 
 			if inpututil.IsKeyJustPressed(ebiten.KeyRight) {
-				if g.PlayerX < g.CurrentLevel.Width-1 {
-					g.CurrentLevel.ObjectsGrid[g.PlayerY][g.PlayerX] = level.None
-					g.PlayerX++
-					if ebiten.IsKeyPressed(ebiten.KeySpace) && g.PlayerX < g.CurrentLevel.Width-1 {
-						g.PlayerX++
-					}
-					g.CurrentLevel.ObjectsGrid[g.PlayerY][g.PlayerX] = level.Player
+				newPlayerX++
+				if ebiten.IsKeyPressed(ebiten.KeySpace) && isValid(g, newPlayerX+1, newPlayerY) {
+					newPlayerX++
+					hasMoved = true
+				} else if isValid(g, newPlayerX, newPlayerY) {
+					hasMoved = true
 				}
-				updateLevelGrid(g, oldPlayerX, oldPlayerY)
-				checkPlayerState(g)
-				return nil
 			}
 
 			if inpututil.IsKeyJustPressed(ebiten.KeyLeft) {
-				if g.PlayerX > 0 {
-					g.CurrentLevel.ObjectsGrid[g.PlayerY][g.PlayerX] = level.None
-					g.PlayerX--
-					if ebiten.IsKeyPressed(ebiten.KeySpace) && g.PlayerX > 0 {
-						g.PlayerX--
-					}
-					g.CurrentLevel.ObjectsGrid[g.PlayerY][g.PlayerX] = level.Player
+				newPlayerX--
+				if ebiten.IsKeyPressed(ebiten.KeySpace) && isValid(g, newPlayerX-1, newPlayerY) {
+					newPlayerX--
+					hasMoved = true
+				} else if isValid(g, newPlayerX, newPlayerY) {
+					hasMoved = true
 				}
+			}
+
+			if hasMoved {
 				updateLevelGrid(g, oldPlayerX, oldPlayerY)
-				checkPlayerState(g)
+				updatePlayerState(g, oldPlayerX, oldPlayerY, newPlayerX, newPlayerY)
 				return nil
 			}
 		}
@@ -95,7 +89,23 @@ func (g *Game) Update(screen *ebiten.Image) error {
 	return nil
 }
 
-func updateLevelGrid(g *Game, oldPlayerX int, oldPlayerY int) {
+func isValid(g *Game, newPlayerX, newPlayerY int) bool {
+	if newPlayerX < 0 {
+		return false
+	}
+	if newPlayerY < 0 {
+		return false
+	}
+	if newPlayerX >= g.CurrentLevel.Width {
+		return false
+	}
+	if newPlayerY >= g.CurrentLevel.Height {
+		return false
+	}
+	return g.CurrentLevel.ObjectsGrid[newPlayerY][newPlayerX] == level.None
+}
+
+func updateLevelGrid(g *Game, oldPlayerX, oldPlayerY int) {
 	if g.CurrentLevel.FloorGrid[oldPlayerY][oldPlayerX].IsFallingTile {
 		g.CurrentLevel.FloorGrid[oldPlayerY][oldPlayerX].FallingTileLife--
 		if g.CurrentLevel.FloorGrid[oldPlayerY][oldPlayerX].FallingTileLife <= 0 {
@@ -105,7 +115,11 @@ func updateLevelGrid(g *Game, oldPlayerX int, oldPlayerY int) {
 	}
 }
 
-func checkPlayerState(g *Game) {
+func updatePlayerState(g *Game, oldPlayerX, oldPlayerY, newPlayerX, newPlayerY int) {
+	g.CurrentLevel.ObjectsGrid[oldPlayerY][oldPlayerX] = level.None
+	g.CurrentLevel.ObjectsGrid[newPlayerY][newPlayerX] = level.Player
+	g.PlayerX = newPlayerX
+	g.PlayerY = newPlayerY
 	tileBelowPlayer := g.CurrentLevel.FloorGrid[g.PlayerY][g.PlayerX]
 	switch {
 	case !tileBelowPlayer.IsFloor:
@@ -115,7 +129,7 @@ func checkPlayerState(g *Game) {
 
 func resetGame(g *Game) {
 	g.CurrentLevel = g.ResetLevel.CopyLevel()
-	g.PlayerX = g.ResetLevel.PlayerX
-	g.PlayerY = g.ResetLevel.PlayerY
+	g.PlayerX = g.ResetLevel.PlayerInitialX
+	g.PlayerY = g.ResetLevel.PlayerInitialY
 	g.PlayerState = Alive
 }

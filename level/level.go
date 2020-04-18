@@ -17,12 +17,15 @@ package level
 
 //Level defines the content of a single level of the game
 type Level struct {
-	FloorGrid   [][]Tile
-	ObjectsGrid [][]Object
-	Width       int
-	Height      int
-	PlayerX     int
-	PlayerY     int
+	FloorGrid          [][]Tile
+	ObjectsGrid        [][]Object
+	Width              int
+	Height             int
+	PlayerInitialX     int
+	PlayerInitialY     int
+	FlowerX            int
+	FlowerY            int
+	FlowerInitialState Object
 }
 
 //Tile defines the state of one tile of a level
@@ -39,19 +42,26 @@ type Object int
 const (
 	None Object = iota
 	Player
+	FlowerPot
+	FlowerBud
+	FlowerBaby
+	FlowerGrown
 )
 
 //TestLevel is a dummy level for testing
 var TestLevel Level = Level{
-	Width:   16,
-	Height:  16,
-	PlayerX: 5,
-	PlayerY: 4,
+	Width:              16,
+	Height:             16,
+	PlayerInitialX:     5,
+	PlayerInitialY:     4,
+	FlowerX:            3,
+	FlowerY:            3,
+	FlowerInitialState: FlowerBud,
 	ObjectsGrid: [][]Object{
 		[]Object{None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None},
 		[]Object{None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None},
 		[]Object{None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None},
-		[]Object{None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None},
+		[]Object{None, None, None, FlowerBud, None, None, None, None, None, None, None, None, None, None, None, None},
 		[]Object{None, None, None, None, None, Player, None, None, None, None, None, None, None, None, None, None},
 		[]Object{None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None},
 		[]Object{None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None},
@@ -66,9 +76,10 @@ var TestLevel Level = Level{
 		[]Object{None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None},
 	},
 	FloorGrid: [][]Tile{
-		[]Tile{Tile{true, false, 0}, Tile{true, true, 1}, Tile{true, true, 2}, Tile{true, true, 3}, Tile{false, false, 0}, Tile{false, false, 0}, Tile{false, false, 0}, Tile{false, false, 0}, Tile{false, false, 0}, Tile{false, false, 0}, Tile{false, false, 0}, Tile{false, false, 0}, Tile{false, false, 0}, Tile{false, false, 0}, Tile{false, false, 0}, Tile{false, false, 0}},
-		[]Tile{Tile{false, false, 0}, Tile{false, false, 0}, Tile{false, false, 0}, Tile{false, false, 0}, Tile{false, false, 0}, Tile{false, false, 0}, Tile{false, false, 0}, Tile{false, false, 0}, Tile{false, false, 0}, Tile{false, false, 0}, Tile{false, false, 0}, Tile{false, false, 0}, Tile{false, false, 0}, Tile{false, false, 0}, Tile{false, false, 0}, Tile{false, false, 0}, Tile{false, false, 0}},
-		[]Tile{Tile{false, false, 0}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{true, false, 0}, Tile{true, true, 2}, Tile{true, false, 0}, Tile{true, true, 3}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{false, false, 0}},
+		[]Tile{Tile{true, false, 0}, Tile{true, true, 1}, Tile{true, true, 2}, Tile{true, true, 3}, Tile{false, false, 0}, Tile{false, false, 0}, Tile{false, false, 0}, Tile{false, false, 0}, Tile{false, false, 0}, Tile{false, false, 0}, Tile{false, false, 0}, Tile{false, false, 0}, Tile{false, false, 0}, Tile{false, false, 0}, Tile{false, false, 0}, Tile{true, false, 0}},
+		[]Tile{Tile{false, false, 0}, Tile{false, false, 0}, Tile{false, false, 0}, Tile{false, false, 0}, Tile{false, false, 0}, Tile{false, false, 0}, Tile{false, false, 0}, Tile{false, false, 0}, Tile{false, false, 0}, Tile{false, false, 0}, Tile{false, false, 0}, Tile{false, false, 0}, Tile{false, false, 0}, Tile{false, false, 0}, Tile{false, false, 0}, Tile{true, false, 0}},
+		[]Tile{Tile{false, false, 0}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{true, false, 0}, Tile{true, true, 2}, Tile{true, false, 0}, Tile{true, true, 3}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{true, false, 0}},
+		[]Tile{Tile{false, false, 0}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{true, false, 0}},
 		[]Tile{Tile{false, false, 0}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{false, false, 0}},
 		[]Tile{Tile{false, false, 0}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{false, false, 0}},
 		[]Tile{Tile{false, false, 0}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{false, false, 0}},
@@ -78,9 +89,8 @@ var TestLevel Level = Level{
 		[]Tile{Tile{false, false, 0}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{false, false, 0}},
 		[]Tile{Tile{false, false, 0}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{false, false, 0}},
 		[]Tile{Tile{false, false, 0}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{false, false, 0}},
-		[]Tile{Tile{false, false, 0}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{false, false, 0}},
-		[]Tile{Tile{false, false, 0}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{false, false, 0}},
-		[]Tile{Tile{false, false, 0}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{false, false, 0}},
-		[]Tile{Tile{false, false, 0}, Tile{false, false, 0}, Tile{false, false, 0}, Tile{false, false, 0}, Tile{false, false, 0}, Tile{false, false, 0}, Tile{false, false, 0}, Tile{false, false, 0}, Tile{false, false, 0}, Tile{false, false, 0}, Tile{false, false, 0}, Tile{false, false, 0}, Tile{false, false, 0}, Tile{false, false, 0}, Tile{false, false, 0}, Tile{false, false, 0}, Tile{false, false, 0}},
+		[]Tile{Tile{true, false, 0}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{true, false, 0}},
+		[]Tile{Tile{true, false, 0}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{true, false, 0}, Tile{true, true, 1}, Tile{true, false, 0}},
+		[]Tile{Tile{true, false, 0}, Tile{false, false, 0}, Tile{false, false, 0}, Tile{false, false, 0}, Tile{false, false, 0}, Tile{false, false, 0}, Tile{false, false, 0}, Tile{false, false, 0}, Tile{false, false, 0}, Tile{false, false, 0}, Tile{false, false, 0}, Tile{false, false, 0}, Tile{false, false, 0}, Tile{false, false, 0}, Tile{false, false, 0}, Tile{true, false, 0}},
 	},
 }

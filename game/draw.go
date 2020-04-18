@@ -47,16 +47,38 @@ func (g *Game) Draw(screen *ebiten.Image) {
 					screen.DrawImage(g.Tiles.SubImage(tile).(*ebiten.Image), op)
 				}
 				if g.CurrentLevel.ObjectsGrid[y][x] != level.None {
+					var object image.Rectangle
 					switch g.CurrentLevel.ObjectsGrid[y][x] {
 					case level.Player:
-						object := image.Rect(
+						object = image.Rect(
 							0, 16,
 							16, 48,
 						)
-						op := &ebiten.DrawImageOptions{}
-						op.GeoM.Translate(float64(x*16), float64(y*16)-16)
-						screen.DrawImage(g.Tiles.SubImage(object).(*ebiten.Image), op)
+					case level.FlowerPot:
+						object = image.Rect(
+							0, 48,
+							16, 80,
+						)
+					case level.FlowerBud:
+						object = image.Rect(
+							16, 48,
+							32, 80,
+						)
+					case level.FlowerBaby:
+						object = image.Rect(
+							32, 48,
+							48, 80,
+						)
+					case level.FlowerGrown:
+						object = image.Rect(
+							48, 48,
+							64, 80,
+						)
 					}
+					op := &ebiten.DrawImageOptions{}
+					op.GeoM.Translate(float64(x*16), float64(y*16)-16)
+					screen.DrawImage(g.Tiles.SubImage(object).(*ebiten.Image), op)
+
 				}
 			}
 		}
