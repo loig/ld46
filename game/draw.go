@@ -1,7 +1,5 @@
+//Package game Copyright (C) 2020  Loïg Jezequel
 /*
-ld46, a game made for Ludum Dare 46
-Copyright (C) 2020  Loïg Jezequel
-
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
@@ -15,31 +13,29 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package main
+package game
 
 import (
+	"image"
+
 	"github.com/hajimehoshi/ebiten"
-	"github.com/hajimehoshi/ebiten/ebitenutil"
-	"github.com/loig/ld46/game"
-	"github.com/loig/ld46/level"
 )
 
-var g game.Game
+//Draw for ensuring that Game implements the ebiten.Game interface
+func (g *Game) Draw(screen *ebiten.Image) {
 
-func init() {
-	g.GameState = game.InLevel
-	g.CurrentLevel = level.TestLevel
-	img, _, err := ebitenutil.NewImageFromFile("images/tiles.png", ebiten.FilterDefault)
-	if err != nil {
-		panic(err)
+	for y := 0; y < g.CurrentLevel.Height; y++ {
+		for x := 0; x < g.CurrentLevel.Width; x++ {
+			if g.CurrentLevel.Grid[y][x].IsFloor {
+				tile := image.Rect(
+					0, 0,
+					16, 16,
+				)
+				op := &ebiten.DrawImageOptions{}
+				op.GeoM.Translate(float64(x*16), float64(y*16))
+				screen.DrawImage(g.Tiles.SubImage(tile).(*ebiten.Image), op)
+			}
+		}
 	}
-	g.Tiles = img
-}
 
-func main() {
-	ebiten.SetWindowSize(512, 512)
-	ebiten.SetWindowTitle(game.Title)
-	if err := ebiten.RunGame(&g); err != nil {
-		panic(err)
-	}
 }
