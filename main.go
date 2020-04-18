@@ -30,7 +30,7 @@ func init() {
 
 func main() {
 	ebiten.SetWindowSize(512, 512)
-	ebiten.SetWindowTitle("ld46")
+	ebiten.SetWindowTitle(game.Title)
 	if err := ebiten.RunGame(&g); err != nil {
 		panic(err)
 	}

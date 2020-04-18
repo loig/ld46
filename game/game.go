@@ -4,6 +4,13 @@ import "github.com/hajimehoshi/ebiten"
 
 type state int
 
+//Constants defining the basic parameters of the game
+const (
+	Title        = "ld46"
+	ScreenWidth  = 256
+	ScreenHeight = 256
+)
+
 //Constants defining the possible states of the game
 const (
 	InLevel state = iota
@@ -27,5 +34,5 @@ func (g *Game) Draw(screen *ebiten.Image) {
 
 //Layout for ensuring that Game implements the ebiten.Game interface
 func (g *Game) Layout(outsideWidth, outsideHeigth int) (screenWidth, screenHeight int) {
-	return 256, 256
+	return ScreenWidth, ScreenHeight
 }
