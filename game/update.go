@@ -15,34 +15,14 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package game
 
-import (
-	"github.com/hajimehoshi/ebiten"
-	"github.com/loig/ld46/level"
-)
+import "github.com/hajimehoshi/ebiten"
 
-//Constants defining the basic parameters of the game
-const (
-	Title        = "ld46"
-	ScreenWidth  = 256
-	ScreenHeight = 256
-)
+//Update for ensuring that Game implements the ebiten.Game interface
+func (g *Game) Update(screen *ebiten.Image) error {
 
-//State defines a possible state of the game
-type State int
+	if g.GameState == InLevel {
 
-//Possible State values
-const (
-	InLevel State = iota
-)
+	}
 
-//Game defines the general game structure
-type Game struct {
-	GameState    State
-	CurrentLevel level.Level
-	Tiles        *ebiten.Image
-}
-
-//Layout for ensuring that Game implements the ebiten.Game interface
-func (g *Game) Layout(outsideWidth, outsideHeigth int) (screenWidth, screenHeight int) {
-	return ScreenWidth, ScreenHeight
+	return nil
 }

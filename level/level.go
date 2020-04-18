@@ -17,9 +17,12 @@ package level
 
 //Level defines the content of a single level of the game
 type Level struct {
-	Grid   [][]Tile
-	Width  int
-	Height int
+	FloorGrid   [][]Tile
+	ObjectsGrid [][]Object
+	Width       int
+	Height      int
+	PlayerX     int
+	PlayerY     int
 }
 
 //Tile defines the state of one tile of a level
@@ -27,11 +30,40 @@ type Tile struct {
 	IsFloor bool
 }
 
+//Object defines an object of the game
+type Object int
+
+//Possible Objects
+const (
+	None Object = iota
+	Player
+)
+
 //TestLevel is a dummy level for testing
 var TestLevel Level = Level{
-	Width:  16,
-	Height: 16,
-	Grid: [][]Tile{
+	Width:   16,
+	Height:  16,
+	PlayerX: 5,
+	PlayerY: 4,
+	ObjectsGrid: [][]Object{
+		[]Object{None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None},
+		[]Object{None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None},
+		[]Object{None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None},
+		[]Object{None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None},
+		[]Object{None, None, None, None, None, Player, None, None, None, None, None, None, None, None, None, None},
+		[]Object{None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None},
+		[]Object{None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None},
+		[]Object{None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None},
+		[]Object{None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None},
+		[]Object{None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None},
+		[]Object{None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None},
+		[]Object{None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None},
+		[]Object{None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None},
+		[]Object{None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None},
+		[]Object{None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None},
+		[]Object{None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None},
+	},
+	FloorGrid: [][]Tile{
 		[]Tile{Tile{true}, Tile{false}, Tile{false}, Tile{false}, Tile{false}, Tile{true}, Tile{false}, Tile{false}, Tile{false}, Tile{false}, Tile{false}, Tile{false}, Tile{false}, Tile{false}, Tile{true}, Tile{true}},
 		[]Tile{Tile{false}, Tile{false}, Tile{false}, Tile{false}, Tile{false}, Tile{true}, Tile{false}, Tile{false}, Tile{false}, Tile{false}, Tile{false}, Tile{false}, Tile{false}, Tile{false}, Tile{true}, Tile{true}},
 		[]Tile{Tile{false}, Tile{false}, Tile{false}, Tile{false}, Tile{false}, Tile{true}, Tile{false}, Tile{false}, Tile{false}, Tile{false}, Tile{false}, Tile{false}, Tile{false}, Tile{false}, Tile{true}, Tile{true}},

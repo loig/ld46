@@ -19,23 +19,39 @@ import (
 	"image"
 
 	"github.com/hajimehoshi/ebiten"
+	"github.com/loig/ld46/level"
 )
 
 //Draw for ensuring that Game implements the ebiten.Game interface
 func (g *Game) Draw(screen *ebiten.Image) {
 
-	for y := 0; y < g.CurrentLevel.Height; y++ {
-		for x := 0; x < g.CurrentLevel.Width; x++ {
-			if g.CurrentLevel.Grid[y][x].IsFloor {
-				tile := image.Rect(
-					0, 0,
-					16, 16,
-				)
-				op := &ebiten.DrawImageOptions{}
-				op.GeoM.Translate(float64(x*16), float64(y*16))
-				screen.DrawImage(g.Tiles.SubImage(tile).(*ebiten.Image), op)
+	if g.GameState == InLevel {
+		for y := 0; y < g.CurrentLevel.Height; y++ {
+			for x := 0; x < g.CurrentLevel.Width; x++ {
+				if g.CurrentLevel.FloorGrid[y][x].IsFloor {
+					tile := image.Rect(
+						0, 0,
+						16, 16,
+					)
+					op := &ebiten.DrawImageOptions{}
+					op.GeoM.Translate(float64(x*16), float64(y*16))
+					screen.DrawImage(g.Tiles.SubImage(tile).(*ebiten.Image), op)
+				}
+				if g.CurrentLevel.ObjectsGrid[y][x] != level.None {
+					switch g.CurrentLevel.ObjectsGrid[y][x] {
+					case level.Player:
+						object := image.Rect(
+							0, 16,
+							16, 48,
+						)
+						op := &ebiten.DrawImageOptions{}
+						op.GeoM.Translate(float64(x*16), float64(y*16)-16)
+						screen.DrawImage(g.Tiles.SubImage(object).(*ebiten.Image), op)
+					}
+				}
 			}
 		}
+		return
 	}
 
 }
