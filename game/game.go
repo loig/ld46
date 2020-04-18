@@ -41,7 +41,7 @@ type PState int
 //Possible PState values
 const (
 	Dead PState = iota
-	Alive
+	HoldingNothing
 	HoldingWater
 )
 

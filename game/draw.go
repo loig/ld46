@@ -51,7 +51,7 @@ func (g *Game) Draw(screen *ebiten.Image) {
 					switch g.CurrentLevel.ObjectsGrid[y][x] {
 					case level.Player:
 						switch g.PlayerState {
-						case Alive, Dead:
+						case HoldingNothing, Dead:
 							object = image.Rect(
 								0, 16,
 								16, 48,

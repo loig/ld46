@@ -23,6 +23,7 @@ func (l Level) CopyLevel() Level {
 	copy.Height = l.Height
 	copy.PlayerInitialX = l.PlayerInitialX
 	copy.PlayerInitialY = l.PlayerInitialY
+	copy.FlowerInitialState = l.FlowerInitialState
 
 	copy.FloorGrid = make([][]Tile, l.Height)
 	for y := 0; y < l.Height; y++ {

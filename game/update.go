@@ -36,60 +36,60 @@ func (g *Game) Update(screen *ebiten.Image) error {
 
 			if inpututil.IsKeyJustPressed(ebiten.KeyDown) {
 				newPlayerY++
-				if ebiten.IsKeyPressed(ebiten.KeySpace) && isValid(g, newPlayerX, newPlayerY+1) {
+				if g.PlayerState == HoldingNothing && ebiten.IsKeyPressed(ebiten.KeySpace) && g.isValidPosition(newPlayerX, newPlayerY+1) {
 					newPlayerY++
 					hasMoved = true
-				} else if isValid(g, newPlayerX, newPlayerY) {
+				} else if g.isValidPosition(newPlayerX, newPlayerY) {
 					hasMoved = true
 				}
 			}
 
 			if inpututil.IsKeyJustPressed(ebiten.KeyUp) {
 				newPlayerY--
-				if ebiten.IsKeyPressed(ebiten.KeySpace) && isValid(g, newPlayerX, newPlayerY-1) {
+				if g.PlayerState == HoldingNothing && ebiten.IsKeyPressed(ebiten.KeySpace) && g.isValidPosition(newPlayerX, newPlayerY-1) {
 					newPlayerY--
 					hasMoved = true
-				} else if isValid(g, newPlayerX, newPlayerY) {
+				} else if g.isValidPosition(newPlayerX, newPlayerY) {
 					hasMoved = true
 				}
 			}
 
 			if inpututil.IsKeyJustPressed(ebiten.KeyRight) {
 				newPlayerX++
-				if ebiten.IsKeyPressed(ebiten.KeySpace) && isValid(g, newPlayerX+1, newPlayerY) {
+				if g.PlayerState == HoldingNothing && ebiten.IsKeyPressed(ebiten.KeySpace) && g.isValidPosition(newPlayerX+1, newPlayerY) {
 					newPlayerX++
 					hasMoved = true
-				} else if isValid(g, newPlayerX, newPlayerY) {
+				} else if g.isValidPosition(newPlayerX, newPlayerY) {
 					hasMoved = true
 				}
 			}
 
 			if inpututil.IsKeyJustPressed(ebiten.KeyLeft) {
 				newPlayerX--
-				if ebiten.IsKeyPressed(ebiten.KeySpace) && isValid(g, newPlayerX-1, newPlayerY) {
+				if g.PlayerState == HoldingNothing && ebiten.IsKeyPressed(ebiten.KeySpace) && g.isValidPosition(newPlayerX-1, newPlayerY) {
 					newPlayerX--
 					hasMoved = true
-				} else if isValid(g, newPlayerX, newPlayerY) {
+				} else if g.isValidPosition(newPlayerX, newPlayerY) {
 					hasMoved = true
 				}
 			}
 
 			if hasMoved {
-				updateLevelGrid(g, oldPlayerX, oldPlayerY)
-				updatePlayerState(g, oldPlayerX, oldPlayerY, newPlayerX, newPlayerY)
+				g.updateLevelGrid(oldPlayerX, oldPlayerY)
+				g.updatePlayerState(oldPlayerX, oldPlayerY, newPlayerX, newPlayerY)
 				return nil
 			}
 		}
 
 		if inpututil.IsKeyJustPressed(ebiten.KeyR) {
-			resetGame(g)
+			g.resetGame()
 		}
 	}
 
 	return nil
 }
 
-func isValid(g *Game, newPlayerX, newPlayerY int) bool {
+func (g *Game) isValidPosition(newPlayerX, newPlayerY int) bool {
 	if newPlayerX < 0 {
 		return false
 	}
@@ -103,13 +103,13 @@ func isValid(g *Game, newPlayerX, newPlayerY int) bool {
 		return false
 	}
 	objectOnNewPosition := g.CurrentLevel.ObjectsGrid[newPlayerY][newPlayerX]
-	if g.PlayerState != Alive {
+	if g.PlayerState != HoldingNothing {
 		return objectOnNewPosition == level.None
 	}
 	return objectOnNewPosition == level.None || objectOnNewPosition == level.Water
 }
 
-func updateLevelGrid(g *Game, oldPlayerX, oldPlayerY int) {
+func (g *Game) updateLevelGrid(oldPlayerX, oldPlayerY int) {
 	if g.CurrentLevel.FloorGrid[oldPlayerY][oldPlayerX].IsFallingTile {
 		g.CurrentLevel.FloorGrid[oldPlayerY][oldPlayerX].FallingTileLife--
 		if g.CurrentLevel.FloorGrid[oldPlayerY][oldPlayerX].FallingTileLife <= 0 {
@@ -119,7 +119,7 @@ func updateLevelGrid(g *Game, oldPlayerX, oldPlayerY int) {
 	}
 }
 
-func updatePlayerState(g *Game, oldPlayerX, oldPlayerY, newPlayerX, newPlayerY int) {
+func (g *Game) updatePlayerState(oldPlayerX, oldPlayerY, newPlayerX, newPlayerY int) {
 	g.CurrentLevel.ObjectsGrid[oldPlayerY][oldPlayerX] = level.None
 	g.PlayerX = newPlayerX
 	g.PlayerY = newPlayerY
@@ -130,14 +130,53 @@ func updatePlayerState(g *Game, oldPlayerX, oldPlayerY, newPlayerX, newPlayerY i
 		g.PlayerState = Dead
 	case objectWithPlayer == level.Water:
 		g.PlayerState = HoldingWater
+	case g.PlayerState == HoldingWater:
+		nextToPlant, plantX, plantY := g.isPositionNextToPlant(newPlayerX, newPlayerY)
+		if nextToPlant {
+			g.CurrentLevel.ObjectsGrid[plantY][plantX] = g.CurrentLevel.ObjectsGrid[plantY][plantX].Grow()
+			g.PlayerState = HoldingNothing
+		}
 	}
 	g.CurrentLevel.ObjectsGrid[newPlayerY][newPlayerX] = level.Player
 }
 
-func resetGame(g *Game) {
+// Should never be called with x or y outside of the level
+func (g *Game) isPositionNextToPlant(x, y int) (nextToPlant bool, plantX, plantY int) {
+	plantX = x
+	plantY = y - 1
+	if plantY > 0 {
+		if g.CurrentLevel.ObjectsGrid[plantY][plantX].IsPlant() {
+			return true, plantX, plantY
+		}
+	}
+	plantX = x + 1
+	plantY = y
+	if plantX < g.CurrentLevel.Width {
+		if g.CurrentLevel.ObjectsGrid[plantY][plantX].IsPlant() {
+			return true, plantX, plantY
+		}
+	}
+	plantX = x
+	plantY = y + 1
+	if plantY < g.CurrentLevel.Height {
+		if g.CurrentLevel.ObjectsGrid[plantY][plantX].IsPlant() {
+			return true, plantX, plantY
+		}
+	}
+	plantX = x - 1
+	plantY = y
+	if plantX > 0 {
+		if g.CurrentLevel.ObjectsGrid[plantY][plantX].IsPlant() {
+			return true, plantX, plantY
+		}
+	}
+	return false, 0, 0
+}
+
+func (g *Game) resetGame() {
 	g.CurrentLevel = g.ResetLevel.CopyLevel()
 	g.PlayerX = g.ResetLevel.PlayerInitialX
 	g.PlayerY = g.ResetLevel.PlayerInitialY
-	g.PlayerState = Alive
+	g.PlayerState = HoldingNothing
 	g.FlowerState = g.ResetLevel.FlowerInitialState
 }
