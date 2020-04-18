@@ -34,6 +34,9 @@ func (g *Game) Update(screen *ebiten.Image) error {
 				if g.PlayerY < g.CurrentLevel.Height-1 {
 					g.CurrentLevel.ObjectsGrid[g.PlayerY][g.PlayerX] = level.None
 					g.PlayerY++
+					if ebiten.IsKeyPressed(ebiten.KeySpace) && g.PlayerY < g.CurrentLevel.Height-1 {
+						g.PlayerY++
+					}
 					g.CurrentLevel.ObjectsGrid[g.PlayerY][g.PlayerX] = level.Player
 				}
 				updateLevelGrid(g, oldPlayerX, oldPlayerY)
@@ -45,6 +48,9 @@ func (g *Game) Update(screen *ebiten.Image) error {
 				if g.PlayerY > 0 {
 					g.CurrentLevel.ObjectsGrid[g.PlayerY][g.PlayerX] = level.None
 					g.PlayerY--
+					if ebiten.IsKeyPressed(ebiten.KeySpace) && g.PlayerY > 0 {
+						g.PlayerY--
+					}
 					g.CurrentLevel.ObjectsGrid[g.PlayerY][g.PlayerX] = level.Player
 				}
 				updateLevelGrid(g, oldPlayerX, oldPlayerY)
@@ -56,6 +62,9 @@ func (g *Game) Update(screen *ebiten.Image) error {
 				if g.PlayerX < g.CurrentLevel.Width-1 {
 					g.CurrentLevel.ObjectsGrid[g.PlayerY][g.PlayerX] = level.None
 					g.PlayerX++
+					if ebiten.IsKeyPressed(ebiten.KeySpace) && g.PlayerX < g.CurrentLevel.Width-1 {
+						g.PlayerX++
+					}
 					g.CurrentLevel.ObjectsGrid[g.PlayerY][g.PlayerX] = level.Player
 				}
 				updateLevelGrid(g, oldPlayerX, oldPlayerY)
@@ -67,6 +76,9 @@ func (g *Game) Update(screen *ebiten.Image) error {
 				if g.PlayerX > 0 {
 					g.CurrentLevel.ObjectsGrid[g.PlayerY][g.PlayerX] = level.None
 					g.PlayerX--
+					if ebiten.IsKeyPressed(ebiten.KeySpace) && g.PlayerX > 0 {
+						g.PlayerX--
+					}
 					g.CurrentLevel.ObjectsGrid[g.PlayerY][g.PlayerX] = level.Player
 				}
 				updateLevelGrid(g, oldPlayerX, oldPlayerY)
