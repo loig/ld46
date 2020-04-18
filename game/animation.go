@@ -15,18 +15,84 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package game
 
+//UpdateAnimation determines the step of the animation of each element
+// of the game
+func (g *Game) UpdateAnimation() {
+	switch g.GameState {
+	case BeginMenu:
+	case InLevel:
+		g.UpdatePlayerAnimation()
+		g.UpdateFlowerAnimation()
+	case LevelFinished:
+		g.UpdateEndLevelAnimation()
+	case GameFinished:
+	case InfoPage:
+	}
+}
+
+//ResetAnimation restarts all the animations
+func (g *Game) ResetAnimation() {
+	g.PlayerAnimationStep = 0
+	g.PlayerAnimationFrame = 0
+	g.FlowerAnimationStep = 0
+	g.FlowerAnimationFrame = 0
+	g.EndLevelStep = 0
+	g.EndLevelAnimationStep = 0
+	g.EndLevelAnimationFrame = 0
+}
+
+//UpdatePlayerAnimation determines the step of the animation of the player
+func (g *Game) UpdatePlayerAnimation() {
+	switch g.PlayerState {
+	case Dead:
+		g.PlayerAnimationFrame++
+		if g.PlayerAnimationStep < deathSteps.animationSteps {
+			if g.PlayerAnimationFrame >= deathSteps.framesPerAnimationStep {
+				g.PlayerAnimationFrame = 0
+				g.PlayerAnimationStep++
+			}
+		}
+	case HoldingWater, HoldingNothing:
+		g.PlayerAnimationFrame++
+		if g.PlayerAnimationFrame >= standSteps.framesPerAnimationStep {
+			g.PlayerAnimationFrame = 0
+			g.PlayerAnimationStep++
+			if g.PlayerAnimationStep >= standSteps.animationSteps {
+				g.PlayerAnimationStep = 0
+			}
+		}
+	}
+}
+
+//UpdateFlowerAnimation determines the step of the animation of the player
+func (g *Game) UpdateFlowerAnimation() {
+
+}
+
+//UpdateEndLevelAnimation determines the step of the animation transition
+//between levels
+func (g *Game) UpdateEndLevelAnimation() {
+	if g.EndLevelStep < endLevelNumberOfSteps {
+		g.EndLevelAnimationFrame++
+		if g.EndLevelAnimationFrame >= endLevelSteps[g.EndLevelStep].framesPerAnimationStep {
+			g.EndLevelAnimationFrame = 0
+			g.EndLevelAnimationStep++
+			if g.EndLevelAnimationStep >= endLevelSteps[g.EndLevelStep].animationSteps {
+				g.EndLevelAnimationStep = 0
+				g.EndLevelStep++
+			}
+		}
+	}
+}
+
 type animationInfo struct {
 	framesPerAnimationStep int
 	animationSteps         int
 }
 
-const (
-	endLevelNumberOfSteps = 3
-	deathNumberOfSteps    = 1
-	standNumberOfSteps    = 1
-)
-
 //End of level animation management
+const endLevelNumberOfSteps = 3
+
 type endLevelStepName int
 
 const congratulationText = "Congrats! You did it."
@@ -64,13 +130,12 @@ const (
 var scores [5]int
 
 //Death animation management
-var deathSteps = [deathNumberOfSteps]animationInfo{
-	animationInfo{15, 3},
-}
+var deathSteps = animationInfo{15, 3}
 
 const waitAfterDeath = 60
 
 //Stand animation management
-var standSteps = [standNumberOfSteps]animationInfo{
-	animationInfo{10, 2},
-}
+var standSteps = animationInfo{10, 2}
+
+//Flower animation management
+var flowerSteps = animationInfo{10, 2}

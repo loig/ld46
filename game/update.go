@@ -24,6 +24,8 @@ import (
 //Update for ensuring that Game implements the ebiten.Game interface
 func (g *Game) Update(screen *ebiten.Image) error {
 
+	g.UpdateAnimation()
+
 	if g.GameState == BeginMenu {
 		if inpututil.IsKeyJustPressed(ebiten.KeyDown) {
 			g.MenuFocus = (g.MenuFocus + 1) % EndMenu
@@ -40,8 +42,10 @@ func (g *Game) Update(screen *ebiten.Image) error {
 			switch g.MenuFocus {
 			case Play:
 				g.GameState = InLevel
+				g.ResetAnimation()
 			case Info:
 				g.GameState = InfoPage
+				g.ResetAnimation()
 			case Quit:
 				return ErrEndGame
 			}
@@ -53,6 +57,7 @@ func (g *Game) Update(screen *ebiten.Image) error {
 	if g.GameState == InfoPage {
 		if inpututil.IsKeyJustPressed(ebiten.KeyEnter) || inpututil.IsKeyJustPressed(ebiten.KeyEscape) {
 			g.GameState = BeginMenu
+			g.ResetAnimation()
 		}
 		return nil
 	}
@@ -60,29 +65,12 @@ func (g *Game) Update(screen *ebiten.Image) error {
 	if g.GameState == InLevel {
 		if g.levelComplete() {
 			g.GameState = LevelFinished
-			g.GameStep = 0
-			g.AnimationStep = 0
-			g.AnimationFrame = 0
+			g.ResetAnimation()
 			scores[resets] -= scores[deaths]
 			scores[playerSteps] -= scores[playerDashes]
 		}
 
 		if g.PlayerState != Dead {
-
-			if g.GameStep >= standNumberOfSteps {
-				g.GameStep = 0
-				g.AnimationStep = 0
-				g.AnimationFrame = 0
-			}
-			g.AnimationFrame++
-			if g.AnimationFrame >= standSteps[g.GameStep].framesPerAnimationStep {
-				g.AnimationFrame = 0
-				g.AnimationStep++
-				if g.AnimationStep >= standSteps[g.GameStep].animationSteps {
-					g.AnimationStep = 0
-					g.GameStep++
-				}
-			}
 
 			newPlayerX := g.PlayerX
 			newPlayerY := g.PlayerY
@@ -144,19 +132,8 @@ func (g *Game) Update(screen *ebiten.Image) error {
 				g.updatePlayerState(oldPlayerX, oldPlayerY, newPlayerX, newPlayerY)
 				return nil
 			}
-		} else if g.GameStep < deathNumberOfSteps {
-			g.AnimationFrame++
-			if g.AnimationFrame >= deathSteps[g.GameStep].framesPerAnimationStep {
-				g.AnimationFrame = 0
-				g.AnimationStep++
-				if g.AnimationStep >= deathSteps[g.GameStep].animationSteps {
-					g.AnimationStep = 0
-					g.GameStep++
-				}
-			}
-		} else {
-			g.AnimationFrame++
-			if g.AnimationFrame >= waitAfterDeath {
+		} else if g.PlayerAnimationStep >= deathSteps.animationSteps {
+			if g.PlayerAnimationFrame >= waitAfterDeath {
 				g.resetGame()
 			}
 		}
@@ -170,23 +147,14 @@ func (g *Game) Update(screen *ebiten.Image) error {
 	if g.GameState == LevelFinished {
 
 		if inpututil.IsKeyJustPressed(ebiten.KeyEnter) {
-			if g.GameStep >= endLevelNumberOfSteps {
+			if g.EndLevelStep >= endLevelNumberOfSteps {
 				g.setNextLevel()
 				g.GameState = InLevel
+				g.ResetAnimation()
 			}
-			g.GameStep++
-			g.AnimationStep = 0
-			g.AnimationFrame = 0
-		} else if g.GameStep < endLevelNumberOfSteps {
-			g.AnimationFrame++
-			if g.AnimationFrame >= endLevelSteps[g.GameStep].framesPerAnimationStep {
-				g.AnimationFrame = 0
-				g.AnimationStep++
-				if g.AnimationStep >= endLevelSteps[g.GameStep].animationSteps {
-					g.AnimationStep = 0
-					g.GameStep++
-				}
-			}
+			g.EndLevelStep++
+			g.EndLevelAnimationStep = 0
+			g.EndLevelAnimationFrame = 0
 		}
 
 		return nil
@@ -241,9 +209,7 @@ func (g *Game) updatePlayerState(oldPlayerX, oldPlayerY, newPlayerX, newPlayerY 
 	switch {
 	case !tileBelowPlayer.IsFloor:
 		g.PlayerState = Dead
-		g.GameStep = 0
-		g.AnimationStep = 0
-		g.AnimationFrame = 0
+		g.ResetAnimation()
 		scores[deaths]++
 	case objectWithPlayer == level.Water:
 		g.PlayerState = HoldingWater
@@ -260,9 +226,6 @@ func (g *Game) updatePlayerState(oldPlayerX, oldPlayerY, newPlayerX, newPlayerY 
 
 func (g *Game) resetGame() {
 	scores[resets]++
-	g.GameStep = 0
-	g.AnimationStep = 0
-	g.AnimationFrame = 0
 	g.CurrentLevel = g.ResetLevel.CopyLevel()
 	g.PlayerX = g.ResetLevel.PlayerInitialX
 	g.PlayerY = g.ResetLevel.PlayerInitialY

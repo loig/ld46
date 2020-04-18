@@ -122,19 +122,19 @@ func (g *Game) Draw(screen *ebiten.Image) {
 						switch g.PlayerState {
 						case HoldingNothing:
 							object = image.Rect(
-								0+16*g.AnimationStep, 16,
-								16+16*g.AnimationStep, 48,
+								0+16*g.PlayerAnimationStep, 16,
+								16+16*g.PlayerAnimationStep, 48,
 							)
 						case HoldingWater:
 							object = image.Rect(
-								32+16*g.AnimationStep, 16,
-								48+16*g.AnimationStep, 48,
+								32+16*g.PlayerAnimationStep, 16,
+								48+16*g.PlayerAnimationStep, 48,
 							)
 						case Dead:
-							if g.GameStep < deathNumberOfSteps {
+							if g.PlayerAnimationStep < deathSteps.animationSteps {
 								object = image.Rect(
-									64+16*g.AnimationStep, 16,
-									80+16*g.AnimationStep, 48,
+									64+16*g.PlayerAnimationStep, 16,
+									80+16*g.PlayerAnimationStep, 48,
 								)
 							} else {
 								object = image.Rect(
@@ -150,18 +150,18 @@ func (g *Game) Draw(screen *ebiten.Image) {
 						)
 					case level.FlowerBud:
 						object = image.Rect(
-							16, 48,
-							32, 80,
-						)
-					case level.FlowerBaby:
-						object = image.Rect(
 							32, 48,
 							48, 80,
 						)
+					case level.FlowerBaby:
+						object = image.Rect(
+							64, 48,
+							80, 80,
+						)
 					case level.FlowerGrown:
 						object = image.Rect(
-							48, 48,
-							64, 80,
+							96, 48,
+							112, 80,
 						)
 					case level.Water:
 						object = image.Rect(
@@ -180,14 +180,14 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	}
 
 	if g.GameState == LevelFinished {
-		switch endLevelStepName(g.GameStep) {
+		switch endLevelStepName(g.EndLevelStep) {
 		case congrats:
 			fmt.Println("congrats")
 		case fadeout:
 			fmt.Println("fadeout")
 		case score:
 			text.Draw(screen, congratulationText, g.DisplayFont, 30, 50, color.White)
-			for i := 0; i < g.AnimationStep-1; i++ {
+			for i := 0; i < g.EndLevelAnimationStep-1; i++ {
 				scoreForDisplay := scoreTexts[i] + strconv.Itoa(scores[i])
 				text.Draw(screen, scoreForDisplay, g.DisplayFont, 40, 70+i*10, color.White)
 			}
