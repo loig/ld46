@@ -145,23 +145,23 @@ func (g *Game) Draw(screen *ebiten.Image) {
 						}
 					case level.FlowerPot:
 						object = image.Rect(
-							0, 48,
-							16, 80,
+							0+16*g.FlowerAnimationStep, 48,
+							16+16*g.FlowerAnimationStep, 80,
 						)
 					case level.FlowerBud:
 						object = image.Rect(
-							32, 48,
-							48, 80,
+							32+16*g.FlowerAnimationStep, 48,
+							48+16*g.FlowerAnimationStep, 80,
 						)
 					case level.FlowerBaby:
 						object = image.Rect(
-							64, 48,
-							80, 80,
+							64+16*g.FlowerAnimationStep, 48,
+							80+16*g.FlowerAnimationStep, 80,
 						)
 					case level.FlowerGrown:
 						object = image.Rect(
-							96, 48,
-							112, 80,
+							96+16*g.FlowerAnimationStep, 48,
+							112+16*g.FlowerAnimationStep, 80,
 						)
 					case level.Water:
 						object = image.Rect(

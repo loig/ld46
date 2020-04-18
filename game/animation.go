@@ -66,7 +66,14 @@ func (g *Game) UpdatePlayerAnimation() {
 
 //UpdateFlowerAnimation determines the step of the animation of the player
 func (g *Game) UpdateFlowerAnimation() {
-
+	g.FlowerAnimationFrame++
+	if g.FlowerAnimationFrame >= flowerSteps.framesPerAnimationStep {
+		g.FlowerAnimationFrame = 0
+		g.FlowerAnimationStep++
+		if g.FlowerAnimationStep >= flowerSteps.animationSteps {
+			g.FlowerAnimationStep = 0
+		}
+	}
 }
 
 //UpdateEndLevelAnimation determines the step of the animation transition
@@ -138,4 +145,4 @@ const waitAfterDeath = 60
 var standSteps = animationInfo{10, 2}
 
 //Flower animation management
-var flowerSteps = animationInfo{10, 2}
+var flowerSteps = animationInfo{18, 2}
