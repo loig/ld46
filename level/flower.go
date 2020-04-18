@@ -16,7 +16,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 package level
 
 //Grow gives the next growing state of a plant
-func (o Object) Grow() (grownPlant Object) {
+func (o Object) Grow() (grownFlower Object) {
 	switch o {
 	case FlowerPot:
 		return FlowerBud
@@ -28,7 +28,12 @@ func (o Object) Grow() (grownPlant Object) {
 	return o
 }
 
-//IsPlant tells if an object is a plant
-func (o Object) IsPlant() bool {
+//IsFullyGrown tells if an object is a fully grown flower
+func (o Object) IsFullyGrown() bool {
+	return o == FlowerGrown
+}
+
+//IsFlower tells if an object is a flower
+func (o Object) IsFlower() bool {
 	return o == FlowerPot || o == FlowerBud || o == FlowerBaby || o == FlowerGrown
 }

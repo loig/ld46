@@ -16,6 +16,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 package game
 
 import (
+	"fmt"
+
 	"github.com/hajimehoshi/ebiten"
 	"github.com/hajimehoshi/ebiten/inpututil"
 	"github.com/loig/ld46/level"
@@ -25,6 +27,10 @@ import (
 func (g *Game) Update(screen *ebiten.Image) error {
 
 	if g.GameState == InLevel {
+
+		if g.levelComplete() {
+			fmt.Println("ok")
+		}
 
 		if g.PlayerState != Dead {
 
@@ -131,9 +137,10 @@ func (g *Game) updatePlayerState(oldPlayerX, oldPlayerY, newPlayerX, newPlayerY 
 	case objectWithPlayer == level.Water:
 		g.PlayerState = HoldingWater
 	case g.PlayerState == HoldingWater:
-		nextToPlant, plantX, plantY := g.isPositionNextToPlant(newPlayerX, newPlayerY)
-		if nextToPlant {
-			g.CurrentLevel.ObjectsGrid[plantY][plantX] = g.CurrentLevel.ObjectsGrid[plantY][plantX].Grow()
+		nextToFlower, flowerX, flowerY := g.isPositionNextToFlower(newPlayerX, newPlayerY)
+		if nextToFlower {
+			g.FlowerState = g.CurrentLevel.ObjectsGrid[flowerY][flowerX].Grow()
+			g.CurrentLevel.ObjectsGrid[flowerY][flowerX] = g.FlowerState
 			g.PlayerState = HoldingNothing
 		}
 	}
@@ -141,33 +148,33 @@ func (g *Game) updatePlayerState(oldPlayerX, oldPlayerY, newPlayerX, newPlayerY 
 }
 
 // Should never be called with x or y outside of the level
-func (g *Game) isPositionNextToPlant(x, y int) (nextToPlant bool, plantX, plantY int) {
-	plantX = x
-	plantY = y - 1
-	if plantY > 0 {
-		if g.CurrentLevel.ObjectsGrid[plantY][plantX].IsPlant() {
-			return true, plantX, plantY
+func (g *Game) isPositionNextToFlower(x, y int) (nextToFlower bool, flowerX, flowerY int) {
+	flowerX = x
+	flowerY = y - 1
+	if flowerY > 0 {
+		if g.CurrentLevel.ObjectsGrid[flowerY][flowerX].IsFlower() {
+			return true, flowerX, flowerY
 		}
 	}
-	plantX = x + 1
-	plantY = y
-	if plantX < g.CurrentLevel.Width {
-		if g.CurrentLevel.ObjectsGrid[plantY][plantX].IsPlant() {
-			return true, plantX, plantY
+	flowerX = x + 1
+	flowerY = y
+	if flowerX < g.CurrentLevel.Width {
+		if g.CurrentLevel.ObjectsGrid[flowerY][flowerX].IsFlower() {
+			return true, flowerX, flowerY
 		}
 	}
-	plantX = x
-	plantY = y + 1
-	if plantY < g.CurrentLevel.Height {
-		if g.CurrentLevel.ObjectsGrid[plantY][plantX].IsPlant() {
-			return true, plantX, plantY
+	flowerX = x
+	flowerY = y + 1
+	if flowerY < g.CurrentLevel.Height {
+		if g.CurrentLevel.ObjectsGrid[flowerY][flowerX].IsFlower() {
+			return true, flowerX, flowerY
 		}
 	}
-	plantX = x - 1
-	plantY = y
-	if plantX > 0 {
-		if g.CurrentLevel.ObjectsGrid[plantY][plantX].IsPlant() {
-			return true, plantX, plantY
+	flowerX = x - 1
+	flowerY = y
+	if flowerX > 0 {
+		if g.CurrentLevel.ObjectsGrid[flowerY][flowerX].IsFlower() {
+			return true, flowerX, flowerY
 		}
 	}
 	return false, 0, 0
@@ -179,4 +186,8 @@ func (g *Game) resetGame() {
 	g.PlayerY = g.ResetLevel.PlayerInitialY
 	g.PlayerState = HoldingNothing
 	g.FlowerState = g.ResetLevel.FlowerInitialState
+}
+
+func (g *Game) levelComplete() bool {
+	return g.FlowerState.IsFullyGrown()
 }
