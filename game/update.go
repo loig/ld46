@@ -24,6 +24,32 @@ import (
 //Update for ensuring that Game implements the ebiten.Game interface
 func (g *Game) Update(screen *ebiten.Image) error {
 
+	if g.GameState == BeginMenu {
+		if inpututil.IsKeyJustPressed(ebiten.KeyDown) {
+			g.MenuFocus = (g.MenuFocus + 1) % EndMenu
+			return nil
+		}
+		if inpututil.IsKeyJustPressed(ebiten.KeyUp) {
+			g.MenuFocus = (g.MenuFocus - 1)
+			if g.MenuFocus < 0 {
+				g.MenuFocus = EndMenu - 1
+			}
+			return nil
+		}
+		if inpututil.IsKeyJustPressed(ebiten.KeyEnter) || inpututil.IsKeyJustPressed(ebiten.KeyRight) {
+			switch g.MenuFocus {
+			case Play:
+				g.GameState = InLevel
+			case Info:
+				g.GameState = InfoPage
+			case Quit:
+				return ErrEndGame
+			}
+			return nil
+		}
+		return nil
+	}
+
 	if g.GameState == InLevel {
 		if g.levelComplete() {
 			g.GameState = LevelFinished

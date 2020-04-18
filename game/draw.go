@@ -25,6 +25,53 @@ import (
 //Draw for ensuring that Game implements the ebiten.Game interface
 func (g *Game) Draw(screen *ebiten.Image) {
 
+	if g.GameState == BeginMenu {
+		var button image.Rectangle
+		// Play button
+		button = image.Rect(
+			0, 112,
+			48, 128,
+		)
+		if g.MenuFocus == Play {
+			button = image.Rect(
+				48, 112,
+				96, 128,
+			)
+		}
+		op := &ebiten.DrawImageOptions{}
+		op.GeoM.Translate(104, 128)
+		screen.DrawImage(g.Tiles.SubImage(button).(*ebiten.Image), op)
+		// Info button
+		button = image.Rect(
+			0, 128,
+			48, 144,
+		)
+		if g.MenuFocus == Info {
+			button = image.Rect(
+				48, 128,
+				96, 144,
+			)
+		}
+		op = &ebiten.DrawImageOptions{}
+		op.GeoM.Translate(104, 144)
+		screen.DrawImage(g.Tiles.SubImage(button).(*ebiten.Image), op)
+		// Quit button
+		button = image.Rect(
+			0, 144,
+			48, 160,
+		)
+		if g.MenuFocus == Quit {
+			button = image.Rect(
+				48, 144,
+				96, 160,
+			)
+		}
+		op = &ebiten.DrawImageOptions{}
+		op.GeoM.Translate(104, 160)
+		screen.DrawImage(g.Tiles.SubImage(button).(*ebiten.Image), op)
+		return
+	}
+
 	if g.GameState == InLevel {
 		for y := 0; y < g.CurrentLevel.Height; y++ {
 			for x := 0; x < g.CurrentLevel.Width; x++ {

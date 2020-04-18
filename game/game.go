@@ -16,6 +16,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 package game
 
 import (
+	"errors"
+
 	"github.com/hajimehoshi/ebiten"
 	"github.com/loig/ld46/level"
 )
@@ -27,13 +29,18 @@ const (
 	ScreenHeight = 256
 )
 
+//ErrEndGame is raised at the end of a game
+var ErrEndGame = errors.New("End")
+
 //State defines a possible state of the game
 type State int
 
 //Possible State values
 const (
-	InLevel State = iota
+	BeginMenu State = iota
+	InLevel
 	LevelFinished
+	InfoPage
 )
 
 //PState defines a possible state of the player
@@ -46,6 +53,17 @@ const (
 	HoldingWater
 )
 
+//Focus defines the focused item of the menu
+type Focus int
+
+//Possible Focus values
+const (
+	Play Focus = iota
+	Info
+	Quit
+	EndMenu
+)
+
 //Game defines the general game structure
 type Game struct {
 	GameState    State
@@ -56,6 +74,7 @@ type Game struct {
 	ResetLevel   level.Level
 	CurrentLevel level.Level
 	Tiles        *ebiten.Image
+	MenuFocus    Focus
 }
 
 //Layout for ensuring that Game implements the ebiten.Game interface

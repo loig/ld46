@@ -27,7 +27,8 @@ import (
 var g game.Game
 
 func init() {
-	g.GameState = game.InLevel
+	g.GameState = game.BeginMenu
+	g.MenuFocus = game.Play
 	g.PlayerState = game.HoldingNothing
 	g.ResetLevel = level.TestLevel
 	g.CurrentLevel = g.ResetLevel.CopyLevel()
@@ -45,6 +46,8 @@ func main() {
 	ebiten.SetWindowSize(512, 512)
 	ebiten.SetWindowTitle(game.Title)
 	if err := ebiten.RunGame(&g); err != nil {
-		panic(err)
+		if err != game.ErrEndGame {
+			panic(err)
+		}
 	}
 }
