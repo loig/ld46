@@ -35,9 +35,21 @@ const (
 	InLevel State = iota
 )
 
+//PState defines a possible state of the player
+type PState int
+
+//Possible PState values
+const (
+	Dead PState = iota
+	Alive
+)
+
 //Game defines the general game structure
 type Game struct {
 	GameState    State
+	PlayerState  PState
+	PlayerX      int
+	PlayerY      int
 	ResetLevel   level.Level
 	CurrentLevel level.Level
 	Tiles        *ebiten.Image

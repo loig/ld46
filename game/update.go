@@ -25,46 +25,67 @@ import (
 func (g *Game) Update(screen *ebiten.Image) error {
 
 	if g.GameState == InLevel {
-		if inpututil.IsKeyJustPressed(ebiten.KeyDown) {
-			if g.CurrentLevel.PlayerY < g.CurrentLevel.Height-1 {
-				g.CurrentLevel.ObjectsGrid[g.CurrentLevel.PlayerY][g.CurrentLevel.PlayerX] = level.None
-				g.CurrentLevel.PlayerY++
-				g.CurrentLevel.ObjectsGrid[g.CurrentLevel.PlayerY][g.CurrentLevel.PlayerX] = level.Player
+		if g.PlayerState != Dead {
+			if inpututil.IsKeyJustPressed(ebiten.KeyDown) {
+				if g.PlayerY < g.CurrentLevel.Height-1 {
+					g.CurrentLevel.ObjectsGrid[g.PlayerY][g.PlayerX] = level.None
+					g.PlayerY++
+					g.CurrentLevel.ObjectsGrid[g.PlayerY][g.PlayerX] = level.Player
+				}
+				checkPlayerState(g)
+				return nil
 			}
-			return nil
-		}
 
-		if inpututil.IsKeyJustPressed(ebiten.KeyUp) {
-			if g.CurrentLevel.PlayerY > 0 {
-				g.CurrentLevel.ObjectsGrid[g.CurrentLevel.PlayerY][g.CurrentLevel.PlayerX] = level.None
-				g.CurrentLevel.PlayerY--
-				g.CurrentLevel.ObjectsGrid[g.CurrentLevel.PlayerY][g.CurrentLevel.PlayerX] = level.Player
+			if inpututil.IsKeyJustPressed(ebiten.KeyUp) {
+				if g.PlayerY > 0 {
+					g.CurrentLevel.ObjectsGrid[g.PlayerY][g.PlayerX] = level.None
+					g.PlayerY--
+					g.CurrentLevel.ObjectsGrid[g.PlayerY][g.PlayerX] = level.Player
+				}
+				checkPlayerState(g)
+				return nil
 			}
-			return nil
-		}
 
-		if inpututil.IsKeyJustPressed(ebiten.KeyRight) {
-			if g.CurrentLevel.PlayerX < g.CurrentLevel.Width-1 {
-				g.CurrentLevel.ObjectsGrid[g.CurrentLevel.PlayerY][g.CurrentLevel.PlayerX] = level.None
-				g.CurrentLevel.PlayerX++
-				g.CurrentLevel.ObjectsGrid[g.CurrentLevel.PlayerY][g.CurrentLevel.PlayerX] = level.Player
+			if inpututil.IsKeyJustPressed(ebiten.KeyRight) {
+				if g.PlayerX < g.CurrentLevel.Width-1 {
+					g.CurrentLevel.ObjectsGrid[g.PlayerY][g.PlayerX] = level.None
+					g.PlayerX++
+					g.CurrentLevel.ObjectsGrid[g.PlayerY][g.PlayerX] = level.Player
+				}
+				checkPlayerState(g)
+				return nil
 			}
-			return nil
-		}
 
-		if inpututil.IsKeyJustPressed(ebiten.KeyLeft) {
-			if g.CurrentLevel.PlayerX > 0 {
-				g.CurrentLevel.ObjectsGrid[g.CurrentLevel.PlayerY][g.CurrentLevel.PlayerX] = level.None
-				g.CurrentLevel.PlayerX--
-				g.CurrentLevel.ObjectsGrid[g.CurrentLevel.PlayerY][g.CurrentLevel.PlayerX] = level.Player
+			if inpututil.IsKeyJustPressed(ebiten.KeyLeft) {
+				if g.PlayerX > 0 {
+					g.CurrentLevel.ObjectsGrid[g.PlayerY][g.PlayerX] = level.None
+					g.PlayerX--
+					g.CurrentLevel.ObjectsGrid[g.PlayerY][g.PlayerX] = level.Player
+				}
+				checkPlayerState(g)
+				return nil
 			}
-			return nil
 		}
 
 		if inpututil.IsKeyJustPressed(ebiten.KeyR) {
-			g.CurrentLevel = g.ResetLevel.CopyLevel()
+			resetGame(g)
 		}
 	}
 
 	return nil
+}
+
+func checkPlayerState(g *Game) {
+	tileBelowPlayer := g.CurrentLevel.FloorGrid[g.PlayerY][g.PlayerX]
+	switch {
+	case !tileBelowPlayer.IsFloor:
+		g.PlayerState = Dead
+	}
+}
+
+func resetGame(g *Game) {
+	g.CurrentLevel = g.ResetLevel.CopyLevel()
+	g.PlayerX = g.ResetLevel.PlayerX
+	g.PlayerY = g.ResetLevel.PlayerY
+	g.PlayerState = Alive
 }
