@@ -28,7 +28,8 @@ var g game.Game
 
 func init() {
 	g.GameState = game.InLevel
-	g.CurrentLevel = level.TestLevel
+	g.ResetLevel = level.TestLevel
+	g.CurrentLevel = g.ResetLevel.CopyLevel()
 	img, _, err := ebitenutil.NewImageFromFile("images/tiles.png", ebiten.FilterDefault)
 	if err != nil {
 		panic(err)

@@ -38,6 +38,7 @@ const (
 //Game defines the general game structure
 type Game struct {
 	GameState    State
+	ResetLevel   level.Level
 	CurrentLevel level.Level
 	Tiles        *ebiten.Image
 }

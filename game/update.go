@@ -60,6 +60,10 @@ func (g *Game) Update(screen *ebiten.Image) error {
 			}
 			return nil
 		}
+
+		if inpututil.IsKeyJustPressed(ebiten.KeyR) {
+			g.CurrentLevel = g.ResetLevel.CopyLevel()
+		}
 	}
 
 	return nil
