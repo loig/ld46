@@ -129,10 +129,24 @@ func (g *Game) Update(screen *ebiten.Image) error {
 				g.updatePlayerState(oldPlayerX, oldPlayerY, newPlayerX, newPlayerY)
 				return nil
 			}
+		} else if g.GameStep < deathNumberOfSteps {
+			g.AnimationFrame++
+			if g.AnimationFrame >= deathSteps[g.GameStep].framesPerAnimationStep {
+				g.AnimationFrame = 0
+				g.AnimationStep++
+				if g.AnimationStep >= deathSteps[g.GameStep].animationSteps {
+					g.AnimationStep = 0
+					g.GameStep++
+				}
+			}
+		} else {
+			g.AnimationFrame++
+			if g.AnimationFrame >= waitAfterDeath {
+				g.resetGame()
+			}
 		}
 
 		if inpututil.IsKeyJustPressed(ebiten.KeyR) {
-			scores[resets]++
 			g.resetGame()
 		}
 		return nil
@@ -212,6 +226,9 @@ func (g *Game) updatePlayerState(oldPlayerX, oldPlayerY, newPlayerX, newPlayerY 
 	switch {
 	case !tileBelowPlayer.IsFloor:
 		g.PlayerState = Dead
+		g.GameStep = 0
+		g.AnimationStep = 0
+		g.AnimationFrame = 0
 		scores[deaths]++
 	case objectWithPlayer == level.Water:
 		g.PlayerState = HoldingWater
@@ -227,6 +244,7 @@ func (g *Game) updatePlayerState(oldPlayerX, oldPlayerY, newPlayerX, newPlayerY 
 }
 
 func (g *Game) resetGame() {
+	scores[resets]++
 	g.CurrentLevel = g.ResetLevel.CopyLevel()
 	g.PlayerX = g.ResetLevel.PlayerInitialX
 	g.PlayerY = g.ResetLevel.PlayerInitialY
@@ -242,5 +260,6 @@ func (g *Game) setNextLevel() {
 	for i := 0; i < len(scores); i++ {
 		scores[i] = 0
 	}
+	scores[resets] = -1
 	g.resetGame()
 }

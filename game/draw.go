@@ -120,16 +120,28 @@ func (g *Game) Draw(screen *ebiten.Image) {
 					switch g.CurrentLevel.ObjectsGrid[y][x] {
 					case level.Player:
 						switch g.PlayerState {
-						case HoldingNothing, Dead:
+						case HoldingNothing:
 							object = image.Rect(
 								0, 16,
 								16, 48,
 							)
 						case HoldingWater:
 							object = image.Rect(
-								16, 16,
-								32, 48,
+								32, 16,
+								48, 48,
 							)
+						case Dead:
+							if g.GameStep < deathNumberOfSteps {
+								object = image.Rect(
+									64+16*g.AnimationStep, 16,
+									80+16*g.AnimationStep, 48,
+								)
+							} else {
+								object = image.Rect(
+									0, 0,
+									0, 0,
+								)
+							}
 						}
 					case level.FlowerPot:
 						object = image.Rect(

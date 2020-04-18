@@ -22,6 +22,7 @@ type animationInfo struct {
 
 const (
 	endLevelNumberOfSteps = 3
+	deathNumberOfSteps    = 1
 )
 
 //End of level animation management
@@ -60,3 +61,10 @@ const (
 )
 
 var scores [5]int
+
+//Death animation management
+var deathSteps = [deathNumberOfSteps]animationInfo{
+	animationInfo{15, 3},
+}
+
+const waitAfterDeath = 60
