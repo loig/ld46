@@ -217,19 +217,37 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	if g.GameState == LevelFinished {
 		switch endLevelStepName(g.EndLevelStep) {
 		case score:
-			text.Draw(screen, congratulationText, g.DisplayFont, 30, 50, color.White)
+			congratulationForDisplay := congratulationText + strconv.Itoa(g.LevelNumber)
+			text.Draw(screen, congratulationForDisplay, g.DisplayFont, 30, 50, color.White)
 			for i := 0; i < g.EndLevelAnimationStep-1; i++ {
-				scoreForDisplay := scoreTexts[i] + strconv.Itoa(scores[i])
+				scoreForDisplay := scoreTexts[i] + strconv.Itoa(g.Scores[i])
 				text.Draw(screen, scoreForDisplay, g.DisplayFont, 40, 70+i*10, color.White)
 			}
 		case endLevelNumberOfSteps:
-			text.Draw(screen, congratulationText, g.DisplayFont, 30, 50, color.White)
-			for i := 0; i < len(scores); i++ {
-				scoreForDisplay := scoreTexts[i] + strconv.Itoa(scores[i])
+			congratulationForDisplay := congratulationText + strconv.Itoa(g.LevelNumber)
+			text.Draw(screen, congratulationForDisplay, g.DisplayFont, 30, 50, color.White)
+			for i := 0; i < len(g.Scores); i++ {
+				scoreForDisplay := scoreTexts[i] + strconv.Itoa(g.Scores[i])
 				text.Draw(screen, scoreForDisplay, g.DisplayFont, 40, 70+i*10, color.White)
 			}
 		}
 		return
+	}
+
+	if g.GameState == GameFinished {
+		text.Draw(screen, endCongratulationText, g.DisplayFont, 20, 50, color.White)
+		if g.EndGameAnimationStep < endGameSteps.animationSteps {
+			for i := 0; i < g.EndGameAnimationStep-1; i++ {
+				scoreForDisplay := scoreTexts[i] + strconv.Itoa(g.TotalScores[i])
+				text.Draw(screen, scoreForDisplay, g.DisplayFont, 40, 70+i*10, color.White)
+			}
+		} else {
+			for i := 0; i < len(g.TotalScores); i++ {
+				scoreForDisplay := scoreTexts[i] + strconv.Itoa(g.TotalScores[i])
+				text.Draw(screen, scoreForDisplay, g.DisplayFont, 40, 70+i*10, color.White)
+			}
+			text.Draw(screen, finalCongratulationText, g.DisplayFont, 150, 220, color.White)
+		}
 	}
 
 }

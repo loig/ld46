@@ -22,6 +22,7 @@ import "github.com/loig/ld46/level"
 func (g *Game) UpdateAnimation() {
 	switch g.GameState {
 	case BeginMenu:
+	case InTuto:
 	case InLevel:
 		g.UpdatePlayerAnimation()
 		g.UpdateFlowerAnimation()
@@ -29,6 +30,7 @@ func (g *Game) UpdateAnimation() {
 	case LevelFinished:
 		g.UpdateEndLevelAnimation()
 	case GameFinished:
+		g.UpdateEndGameAnimation()
 	case InfoPage:
 	}
 }
@@ -44,6 +46,8 @@ func (g *Game) ResetAnimation() {
 	g.EndLevelAnimationFrame = 0
 	g.FallingTilesAnimationStep = make(map[level.TilePosition]int)
 	g.FallingTilesAnimationFrame = make(map[level.TilePosition]int)
+	g.EndGameAnimationStep = 0
+	g.EndGameAnimationFrame = 0
 }
 
 type animationInfo struct {
@@ -51,12 +55,29 @@ type animationInfo struct {
 	animationSteps         int
 }
 
+//End of game animation management
+var endGameSteps = animationInfo{20, 6}
+
+const endCongratulationText = "Wow, you finished the game!"
+const finalCongratulationText = "See you!"
+
+//UpdateEndGameAnimation determines the step of the final animation
+func (g *Game) UpdateEndGameAnimation() {
+	if g.EndGameAnimationStep < endGameSteps.animationSteps {
+		g.EndGameAnimationFrame++
+		if g.EndGameAnimationFrame >= endGameSteps.framesPerAnimationStep {
+			g.EndGameAnimationFrame = 0
+			g.EndGameAnimationStep++
+		}
+	}
+}
+
 //End of level animation management
 const endLevelNumberOfSteps = 3
 
 type endLevelStepName int
 
-const congratulationText = "Congrats! You did it."
+const congratulationText = "You finished level "
 
 const (
 	congrats endLevelStepName = iota
@@ -67,7 +88,7 @@ const (
 var endLevelSteps = [endLevelNumberOfSteps]animationInfo{
 	animationInfo{15, 3},
 	animationInfo{60, 1},
-	animationInfo{20, 6},
+	animationInfo{20, 5},
 }
 
 //UpdateEndLevelAnimation determines the step of the animation transition

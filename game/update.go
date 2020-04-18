@@ -66,8 +66,8 @@ func (g *Game) Update(screen *ebiten.Image) error {
 		if g.levelComplete() {
 			g.GameState = LevelFinished
 			g.ResetAnimation()
-			scores[resets] -= scores[deaths]
-			scores[playerSteps] -= scores[playerDashes]
+			g.Scores[resets] -= g.Scores[deaths]
+			g.Scores[playerSteps] -= g.Scores[playerDashes]
 		}
 
 		if g.PlayerState != Dead {
@@ -125,9 +125,9 @@ func (g *Game) Update(screen *ebiten.Image) error {
 
 			if hasMoved {
 				if hasDashed {
-					scores[playerDashes]++
+					g.Scores[playerDashes]++
 				}
-				scores[playerSteps]++
+				g.Scores[playerSteps]++
 				g.updateLevelGrid(oldPlayerX, oldPlayerY)
 				g.updatePlayerState(oldPlayerX, oldPlayerY, newPlayerX, newPlayerY)
 				return nil
@@ -156,6 +156,17 @@ func (g *Game) Update(screen *ebiten.Image) error {
 		}
 
 		return nil
+	}
+
+	if g.GameState == GameFinished {
+
+		if inpututil.IsKeyJustPressed(ebiten.KeyEnter) {
+			if g.EndGameAnimationStep >= endGameSteps.animationSteps {
+				return ErrEndGame
+			}
+			g.EndGameAnimationStep = endGameSteps.animationSteps
+			g.EndGameAnimationFrame = 0
+		}
 	}
 
 	return nil
@@ -189,7 +200,7 @@ func (g *Game) updateLevelGrid(oldPlayerX, oldPlayerY int) {
 			tilePos := level.TilePosition{TileX: oldPlayerX, TileY: oldPlayerY}
 			g.FallingTilesAnimationStep[tilePos] = 0
 			g.FallingTilesAnimationFrame[tilePos] = 0
-			scores[destroyed]++
+			g.Scores[destroyed]++
 		}
 	} else if g.CurrentLevel.FloorGrid[oldPlayerY][oldPlayerX].IsLinkedTile {
 		for _, coord := range g.CurrentLevel.LinkedTiles {
@@ -197,7 +208,7 @@ func (g *Game) updateLevelGrid(oldPlayerX, oldPlayerY int) {
 			g.FallingTilesAnimationStep[coord] = 0
 			g.FallingTilesAnimationFrame[coord] = 0
 		}
-		scores[destroyed] += len(g.CurrentLevel.LinkedTiles)
+		g.Scores[destroyed] += len(g.CurrentLevel.LinkedTiles)
 	}
 }
 
@@ -211,7 +222,7 @@ func (g *Game) updatePlayerState(oldPlayerX, oldPlayerY, newPlayerX, newPlayerY 
 	case !tileBelowPlayer.IsFloor:
 		g.PlayerState = Dead
 		g.ResetAnimation()
-		scores[deaths]++
+		g.Scores[deaths]++
 	case objectWithPlayer == level.Water:
 		g.PlayerState = HoldingWater
 	case g.PlayerState == HoldingWater:
@@ -226,7 +237,7 @@ func (g *Game) updatePlayerState(oldPlayerX, oldPlayerY, newPlayerX, newPlayerY 
 }
 
 func (g *Game) resetGame() {
-	scores[resets]++
+	g.Scores[resets]++
 	g.CurrentLevel = g.ResetLevel.CopyLevel()
 	g.PlayerX = g.ResetLevel.PlayerInitialX
 	g.PlayerY = g.ResetLevel.PlayerInitialY
@@ -241,8 +252,9 @@ func (g *Game) levelComplete() bool {
 }
 
 func (g *Game) setNextLevel() {
-	for i := 0; i < len(scores); i++ {
-		scores[i] = 0
+	for i := 0; i < len(g.Scores); i++ {
+		g.TotalScores[i] += g.Scores[i]
+		g.Scores[i] = 0
 	}
 	nextLevel, gameFinished, isTuto, levelNumber, tutoNumber := level.GetLevel()
 	g.GameState = InLevel

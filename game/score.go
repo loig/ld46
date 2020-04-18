@@ -32,5 +32,3 @@ const (
 	playerSteps
 	playerDashes
 )
-
-var scores [5]int

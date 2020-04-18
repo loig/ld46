@@ -80,6 +80,8 @@ type Game struct {
 	EndLevelStep               int
 	EndLevelAnimationStep      int
 	EndLevelAnimationFrame     int
+	EndGameAnimationStep       int
+	EndGameAnimationFrame      int
 	FallingTilesAnimationStep  map[level.TilePosition]int
 	FallingTilesAnimationFrame map[level.TilePosition]int
 	PlayerState                PState
@@ -93,6 +95,8 @@ type Game struct {
 	Tiles                      *ebiten.Image
 	MenuFocus                  Focus
 	DisplayFont                font.Face
+	Scores                     [5]int
+	TotalScores                [5]int
 }
 
 //Layout for ensuring that Game implements the ebiten.Game interface
