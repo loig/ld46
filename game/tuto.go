@@ -18,9 +18,9 @@ package game
 //Text for tuto 1
 const (
 	tuto1text1 = "Use arrows to move"
-	tuto1text2 = "Grab water"
-	tuto1text3 = "Bring it to flower"
-	tuto1text4 = "Don't fall in holes..."
+	tuto1text2 = "Grab water buckets\n     (one at a time)"
+	tuto1text3 = "Bring them to flower"
+	tuto1text4 = "(You can press R\n    to restart level)"
 )
 
 //Text for tuto 2
@@ -28,7 +28,7 @@ const (
 	tuto2text1 = "Beware!"
 	tuto2text2 = "When leaving\n    a falling tile"
 	tuto2text3 = "It will fall,\n    making a hole"
-	tuto2text4 = "(You can press R\n    to restart level)"
+	tuto2text4 = "Better don't fall in holes..."
 )
 
 //Text for tuto 3

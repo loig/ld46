@@ -1,5 +1,5 @@
 /*
-ld46, a game made for Ludum Dare 46
+Xtreme gardening 2020, a game created for Ludum Dare 46
 Copyright (C) 2020  Loïg Jezequel
 
 This program is free software: you can redistribute it and/or modify
@@ -132,7 +132,7 @@ func init() {
 	if err != nil {
 		panic(err)
 	}
-	player.SetVolume(0.4)
+	player.SetVolume(0.2)
 	g.SoundPlayers[game.ScoreDisplaySound] = player
 
 	soundFile, err = ebitenutil.OpenFile("sounds/playerDash.mp3")

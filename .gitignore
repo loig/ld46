@@ -6,6 +6,7 @@
 *.dylib
 ld46
 windows/*
+web/*
 
 # Test binary, built with `go test -c`
 *.test

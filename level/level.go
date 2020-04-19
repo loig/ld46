@@ -65,14 +65,20 @@ const (
 const (
 	tuto1 int = iota
 	afterMove
+	moveAndBlocks1Level
 	tuto2
 	afterFalling
+	falling1Level
 	tuto3
 	afterAged
+	falling2Level
 	tuto4
 	afterDash
+	dash1Level
+	dash2Level
 	tuto5
 	afterLinked
+	falling2revisitedLevel
 )
 
 //GetLevel returns the next level to complete
@@ -94,6 +100,18 @@ func GetLevel() (level *Level, gameFinished, isTuto bool, levelNumber, tutoNumbe
 		return &afterFallingTuto, false, false, levelNumber, currentTuto
 	case afterLinked:
 		return &afterLinkedTuto, false, false, levelNumber, currentTuto
+	case falling1Level:
+		return &falling1, false, false, levelNumber, currentTuto
+	case dash1Level:
+		return &dash1, false, false, levelNumber, currentTuto
+	case falling2Level:
+		return &falling2, false, false, levelNumber, currentTuto
+	case dash2Level:
+		return &dash2, false, false, levelNumber, currentTuto
+	case moveAndBlocks1Level:
+		return &moveAndBlocks1, false, false, levelNumber, currentTuto
+	case falling2revisitedLevel:
+		return &falling2revisited, false, false, levelNumber, currentTuto
 	}
 	return nil, true, false, 0, 0
 }

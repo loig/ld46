@@ -29,6 +29,13 @@ import (
 func (g *Game) Draw(screen *ebiten.Image) {
 
 	if g.GameState == BeginMenu {
+		title := image.Rect(
+			0, 160,
+			144, 208,
+		)
+		op := &ebiten.DrawImageOptions{}
+		op.GeoM.Translate(50, 40)
+		screen.DrawImage(g.Tiles.SubImage(title).(*ebiten.Image), op)
 		var button image.Rectangle
 		// Play button
 		button = image.Rect(
@@ -41,7 +48,7 @@ func (g *Game) Draw(screen *ebiten.Image) {
 				96, 128,
 			)
 		}
-		op := &ebiten.DrawImageOptions{}
+		op = &ebiten.DrawImageOptions{}
 		op.GeoM.Translate(104, 128)
 		screen.DrawImage(g.Tiles.SubImage(button).(*ebiten.Image), op)
 		// Info button
@@ -105,21 +112,21 @@ func (g *Game) Draw(screen *ebiten.Image) {
 				16, 48,
 			)
 			op := &ebiten.DrawImageOptions{}
-			op.GeoM.Translate(190, 20)
+			op.GeoM.Translate(200, 20)
 			screen.DrawImage(g.Tiles.SubImage(toDraw).(*ebiten.Image), op)
 			toDraw = image.Rect(
 				0, 80,
 				16, 112,
 			)
 			op = &ebiten.DrawImageOptions{}
-			op.GeoM.Translate(120, 65)
+			op.GeoM.Translate(200, 65)
 			screen.DrawImage(g.Tiles.SubImage(toDraw).(*ebiten.Image), op)
 			toDraw = image.Rect(
 				64, 48,
 				80, 80,
 			)
 			op = &ebiten.DrawImageOptions{}
-			op.GeoM.Translate(190, 115)
+			op.GeoM.Translate(200, 115)
 			screen.DrawImage(g.Tiles.SubImage(toDraw).(*ebiten.Image), op)
 		case 2:
 			text.Draw(screen, tuto2text1, g.DisplayFont, 30, 40, color.White)

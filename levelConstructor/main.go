@@ -30,6 +30,7 @@ const (
 	fallTile2
 	fallTile3
 	linkTile
+	noTile
 )
 
 const (
@@ -104,7 +105,7 @@ func main() {
 				linkedTiles = append(linkedTiles, lTilePos{pos, height - 1})
 				lineAsFloor[pos] = linkTile
 			default:
-				panic("Unrecognized character")
+				lineAsFloor[pos] = noTile
 			}
 		}
 		floorGrid = append(floorGrid, lineAsFloor)
@@ -224,6 +225,8 @@ func main() {
 					fmt.Println("Tile{IsFloor: true, IsFallingTile: true, FallingTileLife: 3},")
 				case linkTile:
 					fmt.Println("Tile{IsFloor: true, IsLinkedTile: true},")
+				case noTile:
+					fmt.Println("Tile{IsFloor: false},")
 				}
 			} else {
 				fmt.Println("Tile{IsFloor: false},")
