@@ -54,6 +54,18 @@ func init() {
 		Hinting: font.HintingFull,
 	})
 
+	musicFile, err := ebitenutil.OpenFile("sounds/music.mp3")
+	music, err := mp3.Decode(g.AudioContext, musicFile)
+	if err != nil {
+		panic(err)
+	}
+	infiniteMusic := audio.NewInfiniteLoop(music, 70*4*44100)
+	musicPlayer, err := audio.NewPlayer(g.AudioContext, infiniteMusic)
+	if err != nil {
+		panic(err)
+	}
+	g.MusicPlayer = musicPlayer
+
 	soundFile, err := ebitenutil.OpenFile("sounds/playerFall.mp3")
 	sound, err := mp3.Decode(g.AudioContext, soundFile)
 	if err != nil {

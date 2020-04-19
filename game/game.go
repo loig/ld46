@@ -99,6 +99,7 @@ type Game struct {
 	TotalScores                [5]int
 	AudioContext               *audio.Context
 	SoundPlayers               [numSound]*audio.Player
+	MusicPlayer                *audio.Player
 }
 
 //Layout for ensuring that Game implements the ebiten.Game interface

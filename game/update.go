@@ -27,6 +27,10 @@ func (g *Game) Update(screen *ebiten.Image) error {
 	g.UpdateAnimation()
 
 	if g.GameState == BeginMenu {
+		if !g.MusicPlayer.IsPlaying() {
+			g.MusicPlayer.Rewind()
+			g.MusicPlayer.Play()
+		}
 		if inpututil.IsKeyJustPressed(ebiten.KeyDown) {
 			g.MenuFocus = (g.MenuFocus + 1) % EndMenu
 			g.PlaySound(MenuMoveSound)
@@ -44,6 +48,7 @@ func (g *Game) Update(screen *ebiten.Image) error {
 			switch g.MenuFocus {
 			case Play:
 				g.GameState = g.StateAfterMenu
+				g.MusicPlayer.Pause()
 				g.PlaySound(MenuConfirmSound)
 				g.ResetAnimation()
 			case Info:
@@ -75,6 +80,7 @@ func (g *Game) Update(screen *ebiten.Image) error {
 
 	if g.GameState == InLevel {
 		if g.levelComplete() {
+			g.MusicPlayer.Pause()
 			g.GameState = LevelFinished
 			g.ResetAnimation()
 			g.Scores[resets] -= g.Scores[deaths]
@@ -300,6 +306,8 @@ func (g *Game) setNextLevel() {
 		g.PlaySound(ScoreDisplaySound)
 	} else {
 		g.PlaySound(LevelBeginSound)
+		g.MusicPlayer.Rewind()
+		g.MusicPlayer.Play()
 	}
 	g.ResetAnimation()
 }

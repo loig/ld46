@@ -69,6 +69,7 @@ const (
 	tuto2
 	afterFalling
 	falling1Level
+	falling3Level
 	tuto3
 	afterAged
 	falling2Level
@@ -112,6 +113,8 @@ func GetLevel() (level *Level, gameFinished, isTuto bool, levelNumber, tutoNumbe
 		return &moveAndBlocks1, false, false, levelNumber, currentTuto
 	case falling2revisitedLevel:
 		return &falling2revisited, false, false, levelNumber, currentTuto
+	case falling3Level:
+		return &falling3, false, false, levelNumber, currentTuto
 	}
 	return nil, true, false, 0, 0
 }

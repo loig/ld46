@@ -19,7 +19,7 @@ package game
 const (
 	tuto1text1 = "Use arrows to move"
 	tuto1text2 = "Grab water buckets\n     (one at a time)"
-	tuto1text3 = "Bring them to flower"
+	tuto1text3 = "Bring near to flower"
 	tuto1text4 = "(You can press R\n    to restart level)"
 )
 
