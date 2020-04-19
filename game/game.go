@@ -71,6 +71,7 @@ const (
 //Game defines the general game structure
 type Game struct {
 	GameState                  State
+	StateAfterMenu             State
 	PlayerAnimationStep        int
 	PlayerAnimationFrame       int
 	FlowerAnimationStep        int
@@ -110,11 +111,12 @@ func (g *Game) Layout(outsideWidth, outsideHeigth int) (screenWidth, screenHeigh
 func (g *Game) InitGame() {
 	nextLevel, gameFinished, isTuto, levelNumber, tutoNumber := level.GetLevel()
 	g.GameState = BeginMenu
+	g.StateAfterMenu = InLevel
 	if isTuto {
-		g.GameState = InTuto
+		g.StateAfterMenu = InTuto
 	}
 	if gameFinished {
-		g.GameState = GameFinished
+		g.StateAfterMenu = GameFinished
 	}
 	g.MenuFocus = Play
 	g.PlayerState = HoldingNothing

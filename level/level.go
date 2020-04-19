@@ -16,7 +16,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 package level
 
 var currentLevel = 0
-var currentTuto = 0
+var currentTuto = 1
 
 //Level defines the content of a single level of the game
 type Level struct {
@@ -61,14 +61,30 @@ const (
 	Water
 )
 
+//Order of levels
+const (
+	tuto1 int = iota
+	tuto2
+	tuto3
+	tuto4
+	tuto5
+	level1
+	level2
+)
+
 //GetLevel returns the next level to complete
 func GetLevel() (level *Level, gameFinished, isTuto bool, levelNumber, tutoNumber int) {
 	currentLevel++
-	switch currentLevel {
-	case 1:
-		return &testLevel, false, false, currentLevel, currentTuto
-	case 2:
-		return &testLevel2, false, false, currentLevel, currentTuto
+	levelNumber = currentLevel - currentTuto + 1
+	switch currentLevel - 1 {
+	case tuto1, tuto2, tuto3, tuto4, tuto5:
+		tutoNumber = currentTuto
+		currentTuto++
+		return nil, false, true, levelNumber, tutoNumber
+	case level1:
+		return &testLevel, false, false, levelNumber, currentTuto
+	case level2:
+		return &testLevel2, false, false, levelNumber, currentTuto
 	}
 	return nil, true, false, 0, 0
 }

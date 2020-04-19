@@ -43,7 +43,7 @@ func (g *Game) Update(screen *ebiten.Image) error {
 		if inpututil.IsKeyJustPressed(ebiten.KeyEnter) {
 			switch g.MenuFocus {
 			case Play:
-				g.GameState = InLevel
+				g.GameState = g.StateAfterMenu
 				g.PlaySound(MenuConfirmSound)
 				g.ResetAnimation()
 			case Info:
@@ -65,6 +65,12 @@ func (g *Game) Update(screen *ebiten.Image) error {
 			g.ResetAnimation()
 		}
 		return nil
+	}
+
+	if g.GameState == InTuto {
+		if inpututil.IsKeyJustPressed(ebiten.KeyEnter) {
+			g.setNextLevel()
+		}
 	}
 
 	if g.GameState == InLevel {
@@ -290,6 +296,10 @@ func (g *Game) setNextLevel() {
 	g.FlowerState = g.CurrentLevel.FlowerInitialState
 	g.FallingTilesAnimationStep = make(map[level.TilePosition]int)
 	g.FallingTilesAnimationFrame = make(map[level.TilePosition]int)
-	g.PlaySound(LevelBeginSound)
+	if g.GameState == InTuto {
+		g.PlaySound(ScoreDisplaySound)
+	} else {
+		g.PlaySound(LevelBeginSound)
+	}
 	g.ResetAnimation()
 }

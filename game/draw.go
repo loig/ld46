@@ -93,6 +93,89 @@ func (g *Game) Draw(screen *ebiten.Image) {
 		text.Draw(screen, infoCommandInfo, g.InfoFont, 92, 250, color.White)
 	}
 
+	if g.GameState == InTuto {
+		switch g.TutoNumber {
+		case 1:
+			text.Draw(screen, tuto1text1, g.DisplayFont, 30, 40, color.White)
+			text.Draw(screen, tuto1text2, g.DisplayFont, 30, 90, color.White)
+			text.Draw(screen, tuto1text3, g.DisplayFont, 30, 140, color.White)
+			text.Draw(screen, tuto1text4, g.DisplayFont, 30, 190, color.White)
+			toDraw := image.Rect(
+				0, 16,
+				16, 48,
+			)
+			op := &ebiten.DrawImageOptions{}
+			op.GeoM.Translate(190, 20)
+			screen.DrawImage(g.Tiles.SubImage(toDraw).(*ebiten.Image), op)
+			toDraw = image.Rect(
+				0, 80,
+				16, 112,
+			)
+			op = &ebiten.DrawImageOptions{}
+			op.GeoM.Translate(120, 65)
+			screen.DrawImage(g.Tiles.SubImage(toDraw).(*ebiten.Image), op)
+			toDraw = image.Rect(
+				64, 48,
+				80, 80,
+			)
+			op = &ebiten.DrawImageOptions{}
+			op.GeoM.Translate(190, 115)
+			screen.DrawImage(g.Tiles.SubImage(toDraw).(*ebiten.Image), op)
+		case 2:
+			text.Draw(screen, tuto2text1, g.DisplayFont, 30, 40, color.White)
+			text.Draw(screen, tuto2text2, g.DisplayFont, 30, 90, color.White)
+			text.Draw(screen, tuto2text3, g.DisplayFont, 30, 140, color.White)
+			toDraw := image.Rect(
+				16, 0,
+				32, 16,
+			)
+			op := &ebiten.DrawImageOptions{}
+			op.GeoM.Translate(190, 82)
+			screen.DrawImage(g.Tiles.SubImage(toDraw).(*ebiten.Image), op)
+		case 3:
+			text.Draw(screen, tuto3text1, g.DisplayFont, 30, 80, color.White)
+			text.Draw(screen, tuto3text2, g.DisplayFont, 30, 130, color.White)
+		case 4:
+			text.Draw(screen, tuto4text1, g.DisplayFont, 30, 40, color.White)
+			text.Draw(screen, tuto4text2, g.DisplayFont, 30, 90, color.White)
+			text.Draw(screen, tuto4text3, g.DisplayFont, 30, 140, color.White)
+			text.Draw(screen, tuto4text4, g.DisplayFont, 30, 190, color.White)
+			toDraw := image.Rect(
+				48, 0,
+				64, 16,
+			)
+			op := &ebiten.DrawImageOptions{}
+			op.GeoM.Translate(190, 82)
+			screen.DrawImage(g.Tiles.SubImage(toDraw).(*ebiten.Image), op)
+			toDraw = image.Rect(
+				32, 0,
+				48, 16,
+			)
+			op = &ebiten.DrawImageOptions{}
+			op.GeoM.Translate(190, 132)
+			screen.DrawImage(g.Tiles.SubImage(toDraw).(*ebiten.Image), op)
+			toDraw = image.Rect(
+				16, 0,
+				32, 16,
+			)
+			op = &ebiten.DrawImageOptions{}
+			op.GeoM.Translate(190, 182)
+			screen.DrawImage(g.Tiles.SubImage(toDraw).(*ebiten.Image), op)
+		case 5:
+			text.Draw(screen, tuto5text1, g.DisplayFont, 30, 40, color.White)
+			text.Draw(screen, tuto5text2, g.DisplayFont, 30, 90, color.White)
+			text.Draw(screen, tuto5text3, g.DisplayFont, 30, 140, color.White)
+			toDraw := image.Rect(
+				64, 0,
+				80, 16,
+			)
+			op := &ebiten.DrawImageOptions{}
+			op.GeoM.Translate(190, 82)
+			screen.DrawImage(g.Tiles.SubImage(toDraw).(*ebiten.Image), op)
+		}
+		text.Draw(screen, tutoCommandInfo, g.InfoFont, 75, 250, color.White)
+	}
+
 	if g.GameState == InLevel ||
 		(g.GameState == LevelFinished &&
 			(endLevelStepName(g.EndLevelStep) == congrats ||

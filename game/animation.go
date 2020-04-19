@@ -73,6 +73,7 @@ const (
 	InfoBlock3         = "  Code source under GPL-3.0\n         available at\n https://github.com/loig/ld46"
 	scoreCommandInfo   = "Enter to continue."
 	endGameCommandInfo = "Enter to quit."
+	tutoCommandInfo    = "Enter to continue."
 )
 
 //End of game animation management
