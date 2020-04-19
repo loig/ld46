@@ -82,7 +82,7 @@ func GetLevel() (level *Level, gameFinished, isTuto bool, levelNumber, tutoNumbe
 		currentTuto++
 		return nil, false, true, levelNumber, tutoNumber
 	case level1:
-		return &testLevel, false, false, levelNumber, currentTuto
+		return &TestLevel, false, false, levelNumber, currentTuto
 	case level2:
 		return &testLevel2, false, false, levelNumber, currentTuto
 	}
