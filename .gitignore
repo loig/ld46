@@ -5,6 +5,7 @@
 *.so
 *.dylib
 ld46
+windows/*
 
 # Test binary, built with `go test -c`
 *.test

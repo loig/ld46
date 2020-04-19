@@ -133,10 +133,11 @@ func (g *Game) Draw(screen *ebiten.Image) {
 			op := &ebiten.DrawImageOptions{}
 			op.GeoM.Translate(190, 82)
 			screen.DrawImage(g.Tiles.SubImage(toDraw).(*ebiten.Image), op)
-		case 3:
-			text.Draw(screen, tuto3text1, g.DisplayFont, 30, 80, color.White)
-			text.Draw(screen, tuto3text2, g.DisplayFont, 30, 130, color.White)
 		case 4:
+			text.Draw(screen, tuto3text1, g.DisplayFont, 30, 40, color.White)
+			text.Draw(screen, tuto3text2, g.DisplayFont, 30, 90, color.White)
+			text.Draw(screen, tuto3text3, g.DisplayFont, 30, 140, color.White)
+		case 3:
 			text.Draw(screen, tuto4text1, g.DisplayFont, 30, 40, color.White)
 			text.Draw(screen, tuto4text2, g.DisplayFont, 30, 90, color.White)
 			text.Draw(screen, tuto4text3, g.DisplayFont, 30, 140, color.White)

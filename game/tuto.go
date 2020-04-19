@@ -35,6 +35,7 @@ const (
 const (
 	tuto3text1 = "Hold space bar\n      and use arrows"
 	tuto3text2 = "You will dash\n      over obstacles"
+	tuto3text3 = "Holding water\n     forbids this move"
 )
 
 //Text for tuto 4
@@ -49,5 +50,5 @@ const (
 const (
 	tuto5text1 = "Beware!"
 	tuto5text2 = "When leaving\n    a linked tile"
-	tuto5text3 = "All such fall,\n    and will make holes"
+	tuto5text3 = "All such will fall,\n    which will make holes"
 )

@@ -100,7 +100,7 @@ func main() {
 				lineAsFloor[pos] = fallTile2
 			case '3':
 				lineAsFloor[pos] = fallTile3
-			case 'l':
+			case 'l', 'L':
 				linkedTiles = append(linkedTiles, lTilePos{pos, height - 1})
 				lineAsFloor[pos] = linkTile
 			default:
