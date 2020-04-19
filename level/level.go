@@ -71,6 +71,7 @@ const (
 	afterFalling
 	bigMoveFallLevel
 	falling1Level
+	beforeFalling3Level
 	falling3Level
 	tuto3
 	afterAged
@@ -81,7 +82,9 @@ const (
 	dash1Level
 	dash2Level
 	tuto5
+	justAfterLinkedTutoLevel
 	afterLinked
+	beforeFalling2RevisitedLevel
 	falling2revisitedLevel
 )
 
@@ -124,6 +127,12 @@ func GetLevel() (level *Level, gameFinished, isTuto bool, levelNumber, tutoNumbe
 		return &bigMoveFall, false, false, levelNumber, currentTuto
 	case bigMoveFallBisLevel:
 		return &bigMoveFallBis, false, false, levelNumber, currentTuto
+	case justAfterLinkedTutoLevel:
+		return &justAfterLinkedTuto, false, false, levelNumber, currentTuto
+	case beforeFalling3Level:
+		return &beforeFalling3, false, false, levelNumber, currentTuto
+	case beforeFalling2RevisitedLevel:
+		return &beforeFalling2Revisited, false, false, levelNumber, currentTuto
 	}
 	return nil, true, false, 0, 0
 }
