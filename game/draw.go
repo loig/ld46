@@ -125,6 +125,7 @@ func (g *Game) Draw(screen *ebiten.Image) {
 			text.Draw(screen, tuto2text1, g.DisplayFont, 30, 40, color.White)
 			text.Draw(screen, tuto2text2, g.DisplayFont, 30, 90, color.White)
 			text.Draw(screen, tuto2text3, g.DisplayFont, 30, 140, color.White)
+			text.Draw(screen, tuto2text4, g.DisplayFont, 30, 190, color.White)
 			toDraw := image.Rect(
 				16, 0,
 				32, 16,

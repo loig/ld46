@@ -28,6 +28,7 @@ const (
 	tuto2text1 = "Beware!"
 	tuto2text2 = "When leaving\n    a falling tile"
 	tuto2text3 = "It will fall,\n    making a hole"
+	tuto2text4 = "(You can press R\n    to restart level)"
 )
 
 //Text for tuto 3

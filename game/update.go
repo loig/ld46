@@ -296,7 +296,7 @@ func (g *Game) setNextLevel() {
 	g.FlowerState = g.CurrentLevel.FlowerInitialState
 	g.FallingTilesAnimationStep = make(map[level.TilePosition]int)
 	g.FallingTilesAnimationFrame = make(map[level.TilePosition]int)
-	if g.GameState == InTuto {
+	if g.GameState == InTuto || g.GameState == GameFinished {
 		g.PlaySound(ScoreDisplaySound)
 	} else {
 		g.PlaySound(LevelBeginSound)
