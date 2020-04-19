@@ -63,6 +63,7 @@ func init() {
 	if err != nil {
 		panic(err)
 	}
+	player.SetVolume(0.7)
 	g.SoundPlayers[game.PlayerFallSound] = player
 
 	soundFile, err = ebitenutil.OpenFile("sounds/tileFall.mp3")
@@ -74,6 +75,7 @@ func init() {
 	if err != nil {
 		panic(err)
 	}
+	player.SetVolume(0.15)
 	g.SoundPlayers[game.TileFallSound] = player
 
 	soundFile, err = ebitenutil.OpenFile("sounds/waterFlower.mp3")
@@ -107,6 +109,7 @@ func init() {
 	if err != nil {
 		panic(err)
 	}
+	player.SetVolume(0.05)
 	g.SoundPlayers[game.PlayerMoveSound] = player
 
 	soundFile, err = ebitenutil.OpenFile("sounds/victory.mp3")
@@ -129,6 +132,7 @@ func init() {
 	if err != nil {
 		panic(err)
 	}
+	player.SetVolume(0.4)
 	g.SoundPlayers[game.ScoreDisplaySound] = player
 
 	soundFile, err = ebitenutil.OpenFile("sounds/playerDash.mp3")
@@ -140,6 +144,7 @@ func init() {
 	if err != nil {
 		panic(err)
 	}
+	player.SetVolume(0.15)
 	g.SoundPlayers[game.PlayerDashSound] = player
 
 	soundFile, err = ebitenutil.OpenFile("sounds/levelBegin.mp3")
@@ -173,6 +178,7 @@ func init() {
 	if err != nil {
 		panic(err)
 	}
+	player.SetVolume(0.05)
 	g.SoundPlayers[game.MenuMoveSound] = player
 
 	soundFile, err = ebitenutil.OpenFile("sounds/menuConfirm.mp3")
@@ -184,6 +190,7 @@ func init() {
 	if err != nil {
 		panic(err)
 	}
+	player.SetVolume(0.05)
 	g.SoundPlayers[game.MenuConfirmSound] = player
 }
 
