@@ -84,9 +84,14 @@ const (
 	tuto5
 	justAfterLinkedTutoLevel
 	afterLinked
+	bigMoveLinkLevel
+	various1Level
+	various2Level
 	beforeFalling2RevisitedLevel
 	falling2revisitedLevel
 )
+
+//Order of levels for testing
 
 //GetLevel returns the next level to complete
 func GetLevel() (level *Level, gameFinished, isTuto bool, levelNumber, tutoNumber int) {
@@ -133,6 +138,12 @@ func GetLevel() (level *Level, gameFinished, isTuto bool, levelNumber, tutoNumbe
 		return &beforeFalling3, false, false, levelNumber, currentTuto
 	case beforeFalling2RevisitedLevel:
 		return &beforeFalling2Revisited, false, false, levelNumber, currentTuto
+	case bigMoveLinkLevel:
+		return &bigMoveLink, false, false, levelNumber, currentTuto
+	case various1Level:
+		return &various1, false, false, levelNumber, currentTuto
+	case various2Level:
+		return &various2, false, false, levelNumber, currentTuto
 	}
 	return nil, true, false, 0, 0
 }

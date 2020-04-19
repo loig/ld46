@@ -31,6 +31,10 @@ func (g *Game) UpdateAnimation() {
 		g.UpdateFallingTilesAnimation()
 		return
 	case LevelFinished:
+		if g.EndLevelStep < 2 {
+			g.UpdateFlowerAnimation()
+			g.UpdateFallingTilesAnimation()
+		}
 		g.UpdateEndLevelAnimation()
 		return
 	case GameFinished:
