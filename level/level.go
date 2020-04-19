@@ -81,6 +81,9 @@ const (
 	afterDash
 	dash1Level
 	dash2Level
+	various3Level
+	various4Level
+	various5Level
 	tuto5
 	justAfterLinkedTutoLevel
 	afterLinked
@@ -144,6 +147,12 @@ func GetLevel() (level *Level, gameFinished, isTuto bool, levelNumber, tutoNumbe
 		return &various1, false, false, levelNumber, currentTuto
 	case various2Level:
 		return &various2, false, false, levelNumber, currentTuto
+	case various3Level:
+		return &various3, false, false, levelNumber, currentTuto
+	case various4Level:
+		return &various4, false, false, levelNumber, currentTuto
+	case various5Level:
+		return &various5, false, false, levelNumber, currentTuto
 	}
 	return nil, true, false, 0, 0
 }
