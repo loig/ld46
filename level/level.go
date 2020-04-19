@@ -90,6 +90,7 @@ const (
 	bigMoveLinkLevel
 	various1Level
 	various2Level
+	various6Level
 	beforeFalling2RevisitedLevel
 	falling2revisitedLevel
 )
@@ -153,6 +154,8 @@ func GetLevel() (level *Level, gameFinished, isTuto bool, levelNumber, tutoNumbe
 		return &various4, false, false, levelNumber, currentTuto
 	case various5Level:
 		return &various5, false, false, levelNumber, currentTuto
+	case various6Level:
+		return &various6, false, false, levelNumber, currentTuto
 	}
 	return nil, true, false, 0, 0
 }
