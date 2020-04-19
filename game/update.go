@@ -29,6 +29,7 @@ func (g *Game) Update(screen *ebiten.Image) error {
 	if g.GameState == BeginMenu {
 		if inpututil.IsKeyJustPressed(ebiten.KeyDown) {
 			g.MenuFocus = (g.MenuFocus + 1) % EndMenu
+			g.PlaySound(MenuMoveSound)
 			return nil
 		}
 		if inpututil.IsKeyJustPressed(ebiten.KeyUp) {
@@ -36,15 +37,18 @@ func (g *Game) Update(screen *ebiten.Image) error {
 			if g.MenuFocus < 0 {
 				g.MenuFocus = EndMenu - 1
 			}
+			g.PlaySound(MenuMoveSound)
 			return nil
 		}
 		if inpututil.IsKeyJustPressed(ebiten.KeyEnter) || inpututil.IsKeyJustPressed(ebiten.KeyRight) {
 			switch g.MenuFocus {
 			case Play:
 				g.GameState = InLevel
+				g.PlaySound(MenuConfirmSound)
 				g.ResetAnimation()
 			case Info:
 				g.GameState = InfoPage
+				g.PlaySound(MenuConfirmSound)
 				g.ResetAnimation()
 			case Quit:
 				return ErrEndGame
@@ -57,6 +61,7 @@ func (g *Game) Update(screen *ebiten.Image) error {
 	if g.GameState == InfoPage {
 		if inpututil.IsKeyJustPressed(ebiten.KeyEnter) || inpututil.IsKeyJustPressed(ebiten.KeyEscape) {
 			g.GameState = BeginMenu
+			g.PlaySound(MenuMoveSound)
 			g.ResetAnimation()
 		}
 		return nil
@@ -126,6 +131,9 @@ func (g *Game) Update(screen *ebiten.Image) error {
 			if hasMoved {
 				if hasDashed {
 					g.Scores[playerDashes]++
+					g.PlaySound(PlayerDashSound)
+				} else {
+					g.PlaySound(PlayerMoveSound)
 				}
 				g.Scores[playerSteps]++
 				g.updateLevelGrid(oldPlayerX, oldPlayerY)
@@ -200,6 +208,7 @@ func (g *Game) updateLevelGrid(oldPlayerX, oldPlayerY int) {
 			tilePos := level.TilePosition{TileX: oldPlayerX, TileY: oldPlayerY}
 			g.FallingTilesAnimationStep[tilePos] = 0
 			g.FallingTilesAnimationFrame[tilePos] = 0
+			g.PlaySound(TileFallSound)
 			g.Scores[destroyed]++
 		}
 	} else if g.CurrentLevel.FloorGrid[oldPlayerY][oldPlayerX].IsLinkedTile {
@@ -208,6 +217,7 @@ func (g *Game) updateLevelGrid(oldPlayerX, oldPlayerY int) {
 			g.FallingTilesAnimationStep[coord] = 0
 			g.FallingTilesAnimationFrame[coord] = 0
 		}
+		g.PlaySound(TileFallSound)
 		g.Scores[destroyed] += len(g.CurrentLevel.LinkedTiles)
 	}
 }
@@ -221,15 +231,18 @@ func (g *Game) updatePlayerState(oldPlayerX, oldPlayerY, newPlayerX, newPlayerY 
 	switch {
 	case !tileBelowPlayer.IsFloor:
 		g.PlayerState = Dead
+		g.PlaySound(PlayerFallSound)
 		g.ResetAnimation()
 		g.Scores[deaths]++
 	case objectWithPlayer == level.Water:
+		g.PlaySound(TakeWaterSound)
 		g.PlayerState = HoldingWater
 	case g.PlayerState == HoldingWater:
 		nextToFlower, flowerX, flowerY := g.CurrentLevel.IsPositionNextToFlower(newPlayerX, newPlayerY)
 		if nextToFlower {
 			g.FlowerState = g.CurrentLevel.ObjectsGrid[flowerY][flowerX].Grow()
 			g.CurrentLevel.ObjectsGrid[flowerY][flowerX] = g.FlowerState
+			g.PlaySound(WaterFlowerSound)
 			g.PlayerState = HoldingNothing
 		}
 	}
@@ -244,6 +257,7 @@ func (g *Game) resetGame() {
 	g.PlayerState = HoldingNothing
 	g.FlowerState = g.ResetLevel.FlowerInitialState
 	g.GameState = InLevel
+	g.PlaySound(ResetSound)
 	g.ResetAnimation()
 }
 
@@ -276,5 +290,6 @@ func (g *Game) setNextLevel() {
 	g.FlowerState = g.CurrentLevel.FlowerInitialState
 	g.FallingTilesAnimationStep = make(map[level.TilePosition]int)
 	g.FallingTilesAnimationFrame = make(map[level.TilePosition]int)
+	g.PlaySound(LevelBeginSound)
 	g.ResetAnimation()
 }

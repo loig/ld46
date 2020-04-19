@@ -20,6 +20,8 @@ package main
 import (
 	"github.com/golang/freetype/truetype"
 	"github.com/hajimehoshi/ebiten"
+	"github.com/hajimehoshi/ebiten/audio"
+	"github.com/hajimehoshi/ebiten/audio/mp3"
 	"github.com/hajimehoshi/ebiten/ebitenutil"
 	"github.com/hajimehoshi/ebiten/examples/resources/fonts"
 	"github.com/loig/ld46/game"
@@ -46,6 +48,138 @@ func init() {
 		DPI:     72,
 		Hinting: font.HintingFull,
 	})
+
+	soundFile, err := ebitenutil.OpenFile("sounds/playerFall.mp3")
+	sound, err := mp3.Decode(g.AudioContext, soundFile)
+	if err != nil {
+		panic(err)
+	}
+	player, err := audio.NewPlayer(g.AudioContext, sound)
+	if err != nil {
+		panic(err)
+	}
+	g.SoundPlayers[game.PlayerFallSound] = player
+
+	soundFile, err = ebitenutil.OpenFile("sounds/tileFall.mp3")
+	sound, err = mp3.Decode(g.AudioContext, soundFile)
+	if err != nil {
+		panic(err)
+	}
+	player, err = audio.NewPlayer(g.AudioContext, sound)
+	if err != nil {
+		panic(err)
+	}
+	g.SoundPlayers[game.TileFallSound] = player
+
+	soundFile, err = ebitenutil.OpenFile("sounds/waterFlower.mp3")
+	sound, err = mp3.Decode(g.AudioContext, soundFile)
+	if err != nil {
+		panic(err)
+	}
+	player, err = audio.NewPlayer(g.AudioContext, sound)
+	if err != nil {
+		panic(err)
+	}
+	g.SoundPlayers[game.WaterFlowerSound] = player
+
+	soundFile, err = ebitenutil.OpenFile("sounds/takeWater.mp3")
+	sound, err = mp3.Decode(g.AudioContext, soundFile)
+	if err != nil {
+		panic(err)
+	}
+	player, err = audio.NewPlayer(g.AudioContext, sound)
+	if err != nil {
+		panic(err)
+	}
+	g.SoundPlayers[game.TakeWaterSound] = player
+
+	soundFile, err = ebitenutil.OpenFile("sounds/playerMove.mp3")
+	sound, err = mp3.Decode(g.AudioContext, soundFile)
+	if err != nil {
+		panic(err)
+	}
+	player, err = audio.NewPlayer(g.AudioContext, sound)
+	if err != nil {
+		panic(err)
+	}
+	g.SoundPlayers[game.PlayerMoveSound] = player
+
+	soundFile, err = ebitenutil.OpenFile("sounds/victory.mp3")
+	sound, err = mp3.Decode(g.AudioContext, soundFile)
+	if err != nil {
+		panic(err)
+	}
+	player, err = audio.NewPlayer(g.AudioContext, sound)
+	if err != nil {
+		panic(err)
+	}
+	g.SoundPlayers[game.VictorySound] = player
+
+	soundFile, err = ebitenutil.OpenFile("sounds/scoreDisplay.mp3")
+	sound, err = mp3.Decode(g.AudioContext, soundFile)
+	if err != nil {
+		panic(err)
+	}
+	player, err = audio.NewPlayer(g.AudioContext, sound)
+	if err != nil {
+		panic(err)
+	}
+	g.SoundPlayers[game.ScoreDisplaySound] = player
+
+	soundFile, err = ebitenutil.OpenFile("sounds/playerDash.mp3")
+	sound, err = mp3.Decode(g.AudioContext, soundFile)
+	if err != nil {
+		panic(err)
+	}
+	player, err = audio.NewPlayer(g.AudioContext, sound)
+	if err != nil {
+		panic(err)
+	}
+	g.SoundPlayers[game.PlayerDashSound] = player
+
+	soundFile, err = ebitenutil.OpenFile("sounds/levelBegin.mp3")
+	sound, err = mp3.Decode(g.AudioContext, soundFile)
+	if err != nil {
+		panic(err)
+	}
+	player, err = audio.NewPlayer(g.AudioContext, sound)
+	if err != nil {
+		panic(err)
+	}
+	g.SoundPlayers[game.LevelBeginSound] = player
+
+	soundFile, err = ebitenutil.OpenFile("sounds/reset.mp3")
+	sound, err = mp3.Decode(g.AudioContext, soundFile)
+	if err != nil {
+		panic(err)
+	}
+	player, err = audio.NewPlayer(g.AudioContext, sound)
+	if err != nil {
+		panic(err)
+	}
+	g.SoundPlayers[game.ResetSound] = player
+
+	soundFile, err = ebitenutil.OpenFile("sounds/menuMove.mp3")
+	sound, err = mp3.Decode(g.AudioContext, soundFile)
+	if err != nil {
+		panic(err)
+	}
+	player, err = audio.NewPlayer(g.AudioContext, sound)
+	if err != nil {
+		panic(err)
+	}
+	g.SoundPlayers[game.MenuMoveSound] = player
+
+	soundFile, err = ebitenutil.OpenFile("sounds/menuConfirm.mp3")
+	sound, err = mp3.Decode(g.AudioContext, soundFile)
+	if err != nil {
+		panic(err)
+	}
+	player, err = audio.NewPlayer(g.AudioContext, sound)
+	if err != nil {
+		panic(err)
+	}
+	g.SoundPlayers[game.MenuConfirmSound] = player
 }
 
 func main() {

@@ -19,6 +19,7 @@ import (
 	"errors"
 
 	"github.com/hajimehoshi/ebiten"
+	"github.com/hajimehoshi/ebiten/audio"
 	"github.com/loig/ld46/level"
 	"golang.org/x/image/font"
 )
@@ -97,6 +98,8 @@ type Game struct {
 	DisplayFont                font.Face
 	Scores                     [5]int
 	TotalScores                [5]int
+	AudioContext               *audio.Context
+	SoundPlayers               [numSound]*audio.Player
 }
 
 //Layout for ensuring that Game implements the ebiten.Game interface
@@ -128,4 +131,9 @@ func (g *Game) InitGame() {
 	g.FlowerState = g.CurrentLevel.FlowerInitialState
 	g.FallingTilesAnimationStep = make(map[level.TilePosition]int)
 	g.FallingTilesAnimationFrame = make(map[level.TilePosition]int)
+	var err error
+	g.AudioContext, err = audio.NewContext(44100)
+	if err != nil {
+		panic(err)
+	}
 }

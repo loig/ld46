@@ -68,6 +68,7 @@ func (g *Game) UpdateEndGameAnimation() {
 		if g.EndGameAnimationFrame >= endGameSteps.framesPerAnimationStep {
 			g.EndGameAnimationFrame = 0
 			g.EndGameAnimationStep++
+			g.PlaySound(ScoreDisplaySound)
 		}
 	}
 }
@@ -88,7 +89,7 @@ const (
 var endLevelSteps = [endLevelNumberOfSteps]animationInfo{
 	animationInfo{15, 3},
 	animationInfo{60, 1},
-	animationInfo{20, 5},
+	animationInfo{20, 6},
 }
 
 //UpdateEndLevelAnimation determines the step of the animation transition
@@ -99,9 +100,15 @@ func (g *Game) UpdateEndLevelAnimation() {
 		if g.EndLevelAnimationFrame >= endLevelSteps[g.EndLevelStep].framesPerAnimationStep {
 			g.EndLevelAnimationFrame = 0
 			g.EndLevelAnimationStep++
+			if g.EndLevelStep == 2 {
+				g.PlaySound(ScoreDisplaySound)
+			}
 			if g.EndLevelAnimationStep >= endLevelSteps[g.EndLevelStep].animationSteps {
 				g.EndLevelAnimationStep = 0
 				g.EndLevelStep++
+				if g.EndLevelStep == 1 {
+					g.PlaySound(VictorySound)
+				}
 			}
 		}
 	}
