@@ -40,7 +40,7 @@ func (g *Game) Update(screen *ebiten.Image) error {
 			g.PlaySound(MenuMoveSound)
 			return nil
 		}
-		if inpututil.IsKeyJustPressed(ebiten.KeyEnter) || inpututil.IsKeyJustPressed(ebiten.KeyRight) {
+		if inpututil.IsKeyJustPressed(ebiten.KeyEnter) {
 			switch g.MenuFocus {
 			case Play:
 				g.GameState = InLevel

@@ -22,16 +22,22 @@ import "github.com/loig/ld46/level"
 func (g *Game) UpdateAnimation() {
 	switch g.GameState {
 	case BeginMenu:
+		return
 	case InTuto:
+		return
 	case InLevel:
 		g.UpdatePlayerAnimation()
 		g.UpdateFlowerAnimation()
 		g.UpdateFallingTilesAnimation()
+		return
 	case LevelFinished:
 		g.UpdateEndLevelAnimation()
+		return
 	case GameFinished:
 		g.UpdateEndGameAnimation()
+		return
 	case InfoPage:
+		return
 	}
 }
 
@@ -54,6 +60,20 @@ type animationInfo struct {
 	framesPerAnimationStep int
 	animationSteps         int
 }
+
+//Menus animation management
+const (
+	menuPlayChoiceText = "Play"
+	menuInfoChoiceText = "Info"
+	menuQuitChoiceText = "Quit"
+	menuCommandInfo    = "Arrows to move. Enter to select."
+	infoCommandInfo    = "Enter to quit."
+	InfoBlock          = "A game developped in 48h\n    by Loig Jezequel\n   for Ludum Dare 46!\n(see  https://ldjam.com)"
+	InfoBlock2         = "All images and sound are"
+	InfoBlock3         = "  Code source under GPL-3.0\n         available at\n https://github.com/loig/ld46"
+	scoreCommandInfo   = "Enter to continue."
+	endGameCommandInfo = "Enter to quit."
+)
 
 //End of game animation management
 var endGameSteps = animationInfo{20, 6}

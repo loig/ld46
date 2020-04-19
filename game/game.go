@@ -29,9 +29,6 @@ const (
 	Title        = "ld46"
 	ScreenWidth  = 256
 	ScreenHeight = 256
-	InfoBlock    = "A game developped in 48h\n    by Loig Jezequel\n   for Ludum Dare 46!\n(see  https://ldjam.com)"
-	InfoBlock2   = "All images and sound are"
-	InfoBlock3   = "  Code source under GPL-3.0\n         available at\n https://github.com/loig/ld46"
 )
 
 //ErrEndGame is raised at the end of a game
@@ -96,6 +93,7 @@ type Game struct {
 	Tiles                      *ebiten.Image
 	MenuFocus                  Focus
 	DisplayFont                font.Face
+	InfoFont                   font.Face
 	Scores                     [5]int
 	TotalScores                [5]int
 	AudioContext               *audio.Context

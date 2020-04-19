@@ -72,6 +72,10 @@ func (g *Game) Draw(screen *ebiten.Image) {
 		op = &ebiten.DrawImageOptions{}
 		op.GeoM.Translate(104, 160)
 		screen.DrawImage(g.Tiles.SubImage(button).(*ebiten.Image), op)
+		text.Draw(screen, menuPlayChoiceText, g.DisplayFont, 112, 139, color.White)
+		text.Draw(screen, menuInfoChoiceText, g.DisplayFont, 112, 155, color.White)
+		text.Draw(screen, menuQuitChoiceText, g.DisplayFont, 112, 171, color.White)
+		text.Draw(screen, menuCommandInfo, g.InfoFont, 35, 250, color.White)
 		return
 	}
 
@@ -86,6 +90,7 @@ func (g *Game) Draw(screen *ebiten.Image) {
 		op.GeoM.Translate(80, 90)
 		screen.DrawImage(g.Tiles.SubImage(ccbysa).(*ebiten.Image), op)
 		text.Draw(screen, InfoBlock3, g.DisplayFont, 10, 150, color.White)
+		text.Draw(screen, infoCommandInfo, g.InfoFont, 92, 250, color.White)
 	}
 
 	if g.GameState == InLevel ||
@@ -230,6 +235,7 @@ func (g *Game) Draw(screen *ebiten.Image) {
 				scoreForDisplay := scoreTexts[i] + strconv.Itoa(g.Scores[i])
 				text.Draw(screen, scoreForDisplay, g.DisplayFont, 40, 70+i*10, color.White)
 			}
+			text.Draw(screen, scoreCommandInfo, g.InfoFont, 75, 250, color.White)
 		}
 		return
 	}
@@ -247,6 +253,7 @@ func (g *Game) Draw(screen *ebiten.Image) {
 				text.Draw(screen, scoreForDisplay, g.DisplayFont, 40, 70+i*10, color.White)
 			}
 			text.Draw(screen, finalCongratulationText, g.DisplayFont, 150, 220, color.White)
+			text.Draw(screen, endGameCommandInfo, g.InfoFont, 92, 250, color.White)
 		}
 	}
 

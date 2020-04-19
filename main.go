@@ -48,6 +48,11 @@ func init() {
 		DPI:     72,
 		Hinting: font.HintingFull,
 	})
+	g.InfoFont = truetype.NewFace(ttfont, &truetype.Options{
+		Size:    6,
+		DPI:     72,
+		Hinting: font.HintingFull,
+	})
 
 	soundFile, err := ebitenutil.OpenFile("sounds/playerFall.mp3")
 	sound, err := mp3.Decode(g.AudioContext, soundFile)
